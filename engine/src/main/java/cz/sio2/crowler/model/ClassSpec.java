@@ -34,7 +34,7 @@ public class ClassSpec {
         if (isPartOfId) {
             idSpecs.add(spec);
         }
-
+        // but for all...
         specs.add(spec);
     }
 
@@ -58,7 +58,6 @@ public class ClassSpec {
         ClassSpec classSpec = (ClassSpec) o;
 
         if (iri != null ? !iri.equals(classSpec.iri) : classSpec.iri != null) return false;
-
         if (specs != null ? !specs.equals(classSpec.specs) : classSpec.specs != null) return false;
         if (idSpecs != null ? !idSpecs.equals(classSpec.idSpecs) : classSpec.idSpecs != null) return false;
 
@@ -68,7 +67,6 @@ public class ClassSpec {
     @Override
     public int hashCode() {
         int result = iri != null ? iri.hashCode() : 0;
-
         result = 31 * result + (specs != null ? specs.hashCode() : 0);
         result = 31 * result + (idSpecs != null ? idSpecs.hashCode() : 0);
         return result;

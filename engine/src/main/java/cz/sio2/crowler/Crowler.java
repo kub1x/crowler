@@ -57,7 +57,6 @@ public class Crowler {
             for (Iterator<Element> i = el.iterator(); i.hasNext(); ) {
                 resolve(baseURL, i.next(), initialDefinitionIF.getClassSpec());
             }
-
             return model;
         } catch (Exception e) {
             e.printStackTrace();
@@ -67,7 +66,6 @@ public class Crowler {
 
     private Individual createEmpty(OntClass clazz, String baseURLX, String idBase) {
         Individual i = model.createIndividual(Utils.getUniqueIRI(model, conf.getBaseOntoPrefix(), idBase), clazz);
-
         return i;
     }
 

@@ -51,9 +51,6 @@ public class PropertySpec<T> {
 
         PropertySpec that = (PropertySpec) o;
 
-//        System.out.println(hashCode() + " : " + that.hashCode());
-//        System.out.println(type + " : " + that.type);
-
         if (type != that.type) return false;
         if (iri != null ? !iri.equals(that.iri) : that.iri != null) return false;
         if (objectSpec != null ? !objectSpec.equals(that.objectSpec) : that.objectSpec != null) return false;
@@ -65,24 +62,11 @@ public class PropertySpec<T> {
     @Override
     public int hashCode() {
         int result = 0;
-
         result = type != null ? type.hashCode() : 0;
-//        System.out.println(type + " : " + result);
         result = 31 * result + (iri != null ? iri.hashCode() : 0);
         result = 31 * result + (objectSpec != null ? objectSpec.hashCode() : 0);
         result = 31 * result + (selector != null ? selector.hashCode() : 0);
 
-//        System.out.println("Hashcode: " + super.hashCode());
-//        System.out.println("   iri: " + iri);
-//        System.out.println("   type: " + type);
-//        System.out.println("   objectSpec: " + objectSpec);
-//        System.out.println("   selector: " + selector);
-
-
-//        System.out.println(result +  " : " + super.hashCode());
-
-
         return result;
-//        return super.hashCode();
     }
 }
