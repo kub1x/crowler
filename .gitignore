@@ -7,3 +7,6 @@ target/**
 *.war
 *.ear
 /jena_con
+/engine/.metadata
+/engine/.settings
+/*.log
