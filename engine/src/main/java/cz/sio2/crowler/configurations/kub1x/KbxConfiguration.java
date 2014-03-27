@@ -11,7 +11,8 @@ import cz.sio2.crowler.model.EnumeratedNextPageResolver;
 
 public class KbxConfiguration implements ConfigurationFactory {
 
-	final String SOURCE_URL = "http://www.inventati.org/kub1x/t/";
+	//final String SOURCE_URL = "http://www.inventati.org/kub1x/t/";
+	final String SOURCE_URL = "http://localhost:8888/";
 	
 	@Override
 	public Configuration getConfiguration(final Map<String, String> properties) {

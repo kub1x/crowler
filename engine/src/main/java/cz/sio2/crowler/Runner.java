@@ -11,11 +11,11 @@ import java.util.HashMap;
 public class Runner {
 
 	public static void main(String[] args) {
-
+		
 		// try {
 		if (!Arrays.asList(new String[] { "file", "sesame" }).contains(args[1])) {
 			System.out
-					.println("Usage: Runner <CONFIGURATION_CLASS> (file filename) | (sesame serverurl repositoryid)>");
+					.println("Usage: Runner <CONFIGURATION_CLASS> (file dirname) | (sesame serverurl repositoryid) [selenium_conf_file]>");
 			System.exit(0);
 		}
 		// } catch (ArrayIndexOutOfBoundsException ex) {
@@ -23,11 +23,11 @@ public class Runner {
 		// .println("Usage: Runner <CONFIGURATION_CLASS> (file filename) | (sesame serverurl repositoryid)>");
 		// System.exit(0);
 		// }
-
-		JenaConnector c = null;
+		
+		JenaConnector connector = null;
 
 		if ("file".equals(args[1])) {
-			c = new FileJenaConnector(new File(args[2]), false);
+			connector = new FileJenaConnector(new File(args[2]), false);
 		} else if ("sesame".equals(args[1])) {
 			XTrustProvider.install();
 			final SesameJenaConnector cx = new SesameJenaConnector();
@@ -38,12 +38,12 @@ public class Runner {
 			// cx.setRepositoryId("mondis-webdata");//args[2]);//id+"-"+Calendar.getInstance());
 			// cx.setServerUrl("https://dev.sio2.cz/openrdf-sesame");//args[1]);
 			// cx.setRepositoryId("monumnet-webdata");//args[2]);//id+"-"+Calendar.getInstance());
-			c = cx;
+			connector = cx;
 		}
 		try {
-			final ConfigurationFactory f = (ConfigurationFactory) Class
+			final ConfigurationFactory conf_fact = (ConfigurationFactory) Class
 					.forName(args[0]).newInstance();
-			new FullCrawler(c).run(f.getConfiguration(new HashMap(System
+			new FullCrawler(connector).run(conf_fact.getConfiguration(new HashMap(System
 					.getProperties())));
 		} catch (ClassNotFoundException cnfe) {
 			cnfe.printStackTrace();

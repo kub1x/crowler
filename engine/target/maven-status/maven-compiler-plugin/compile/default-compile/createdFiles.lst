@@ -21,12 +21,14 @@ cz\sio2\crowler\model\Configuration.class
 cz\sio2\crowler\Crowler$1.class
 cz\sio2\crowler\XTrustProvider$TrustManagerFactoryImpl.class
 cz\sio2\crowler\model\IdentitySelector.class
+cz\sio2\crowler\configurations\kub1x\KbxConfiguration.class
+cz\sio2\crowler\configurations\npu\ImmovableHeritageConfiguration.class
 cz\sio2\crowler\Utils$1.class
 cz\sio2\crowler\model\NextPageResolver.class
 cz\sio2\crowler\model\JSoupSelector.class
+cz\sio2\crowler\configurations\npu\MonumnetConfiguration.class
 cz\sio2\crowler\connectors\SesameJenaConnector.class
 cz\sio2\crowler\model\PropertySpec.class
-cz\sio2\crowler\AbstractCrawler.class
 cz\sio2\crowler\Namespaces.class
 cz\sio2\crowler\model\PropertyType.class
 cz\sio2\crowler\JenaConnector.class
@@ -36,3 +38,5 @@ cz\sio2\crowler\model\NewDocumentSelector$1.class
 cz\sio2\crowler\connectors\FileJenaConnector.class
 cz\sio2\crowler\XTrustProvider.class
 cz\sio2\crowler\Factory$1.class
+cz\sio2\crowler\configurations\kub1x\KbxModel.class
+cz\sio2\crowler\configurations\npu\NPU.class
