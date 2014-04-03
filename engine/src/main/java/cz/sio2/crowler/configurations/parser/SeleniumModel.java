@@ -1,4 +1,4 @@
-package cs.sio2.crowler.configurations.parser;
+package cz.sio2.crowler.configurations.parser;
 
 import com.hp.hpl.jena.ontology.OntClass;
 import com.hp.hpl.jena.ontology.OntModel;

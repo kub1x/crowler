@@ -1,4 +1,4 @@
-package cs.sio2.crowler.configurations.parser;
+package cz.sio2.crowler.configurations.parser;
 
 import java.io.File;
 import java.io.IOException;

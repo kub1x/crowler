@@ -1,5 +1,6 @@
 package cz.sio2.crowler;
 
+import cz.sio2.crowler.configurations.parser.SeleniumConfiguration;
 import cz.sio2.crowler.connectors.FileJenaConnector;
 import cz.sio2.crowler.connectors.SesameJenaConnector;
 import cz.sio2.crowler.model.ConfigurationFactory;
@@ -10,7 +11,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import cs.sio2.crowler.configurations.parser.SeleniumConfiguration;
 
 public class Runner {
 
