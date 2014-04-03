@@ -24,4 +24,5 @@ public class SeleniumModel {
     public static OntProperty hasFamilyName = Utils.p(idPrefix + "hasFamilyName", language, schema, PropertyType.DATA, "má příjmení", "Příjmení");
     public static OntProperty hasPhoneNumber = Utils.p(idPrefix + "hasPhoneNumber", language, schema, PropertyType.DATA, "má telefonní číslo", "Telefon");
 
+    //TODO create map from "name" to OntClass/OntProperty
 }
