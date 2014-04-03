@@ -5,13 +5,17 @@ import cz.sio2.crowler.connectors.SesameJenaConnector;
 import cz.sio2.crowler.model.ConfigurationFactory;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+
+import cs.sio2.crowler.configurations.parser.SeleniumConfiguration;
 
 public class Runner {
 
 	public static void main(String[] args) {
-		
+
 		// try {
 		if (!Arrays.asList(new String[] { "file", "sesame" }).contains(args[1])) {
 			System.out
@@ -23,7 +27,7 @@ public class Runner {
 		// .println("Usage: Runner <CONFIGURATION_CLASS> (file filename) | (sesame serverurl repositoryid)>");
 		// System.exit(0);
 		// }
-		
+
 		JenaConnector connector = null;
 
 		if ("file".equals(args[1])) {
@@ -43,14 +47,23 @@ public class Runner {
 		try {
 			final ConfigurationFactory conf_fact = (ConfigurationFactory) Class
 					.forName(args[0]).newInstance();
-			new FullCrawler(connector).run(conf_fact.getConfiguration(new HashMap(System
-					.getProperties())));
+			// if we are in selenium, we need to load scripts
+			if (args[0].contains("SeleniumConfiguration")) {
+				List<File> scripts = new ArrayList<File>();
+				//TODO starting from 2 for "file" option.. for "sesame" it will be 4
+				for (int i = 3; i < args.length; i++) {
+					scripts.add(new File(args[i]));
+				}
+				((SeleniumConfiguration) conf_fact).setStcripts(scripts);
+			}
+			new FullCrawler(connector).run(conf_fact
+					.getConfiguration(new HashMap(System.getProperties())));
 		} catch (ClassNotFoundException cnfe) {
 			cnfe.printStackTrace();
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			e.printStackTrace(); 
+			e.printStackTrace();
 		}
 	}
 }
