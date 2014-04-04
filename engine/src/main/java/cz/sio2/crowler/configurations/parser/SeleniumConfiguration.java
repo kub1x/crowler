@@ -19,6 +19,8 @@ import org.openjena.atlas.logging.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import cz.sio2.crowler.Factory;
@@ -35,11 +37,14 @@ public class SeleniumConfiguration implements ConfigurationFactory {
 			.getName());
 
 	// final String SOURCE_URL = "http://www.inventati.org/kub1x/t/";
-	String SOURCE_URL = "";//"http://localhost:8888/";
-	String ID_PREFIX = "";
-	
+	String SOURCE_URL = "";// "http://localhost:8888/";
+
 	// scripts from Selenium to be parsed and followed
 	List<File> scripts;
+
+	private final Configuration conf = new Configuration();
+
+	ClassSpec chObject = null;
 
 	public void setStcripts(List<File> scripts) {
 		// TODO check - make copy
@@ -48,12 +53,11 @@ public class SeleniumConfiguration implements ConfigurationFactory {
 
 	@Override
 	public Configuration getConfiguration(final Map<String, String> properties) {
-		final Configuration conf = new Configuration();
-		
+
 		Document doc = null;
 		XPath xpath = null;
 		XPathExpression expr = null;
-		
+
 		// parse script
 		try {
 			// init
@@ -71,61 +75,118 @@ public class SeleniumConfiguration implements ConfigurationFactory {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		try {
-			
+
 			// get an url ;)
 			// <link rel="selenium.base" href="localhost:8888" />
 			expr = xpath.compile("//link[@rel='selenium.base']/@href");
-			SOURCE_URL = (String)expr.evaluate(doc, XPathConstants.STRING);
+			SOURCE_URL = (String) expr.evaluate(doc, XPathConstants.STRING);
 			logger.info("source url: " + SOURCE_URL);
-		
+
 			// parse owlSetSchemas
-			//<tr> <td>owlSetSchemas</td> <td></td> <td>http://kub1x.org/dip/gen/</td> </tr>
-			expr = xpath.compile("//tbody/tr/td[text()='owlSetSchemas']/../td[3]");
-			ID_PREFIX = (String)expr.evaluate(doc, XPathConstants.STRING); 
-			conf.setBaseOntoPrefix(ID_PREFIX);
-			logger.info("id prefix: " + ID_PREFIX);
-		
+			// <tr> <td>owlSetSchemas</td> <td></td>
+			// <td>http://kub1x.org/dip/gen/</td> </tr>
+			// expr = xpath
+			// .compile("//tbody/tr/td[text()='owlSetSchemas']/../td[3]");
+			// ID_PREFIX = (String) expr.evaluate(doc, XPathConstants.STRING);
+			// conf.setBaseOntoPrefix(ID_PREFIX);
+			// logger.info("id prefix: " + ID_PREFIX);
+
+			// <tr> <td>owlSetSchemas</td> <td></td>
+			// <td>http://kub1x.org/dip/gen/</td> </tr>
+			expr = xpath.compile("//tbody/tr");
+			NodeList nl = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+			logger.info("got <tr> list of length " + nl.getLength());
+
+			// now parse one command after another and fire them ;)
+			XPathExpression td1 = xpath.compile("./td[1]");
+			XPathExpression td2 = xpath.compile("./td[2]");
+			XPathExpression td3 = xpath.compile("./td[3]");
+			for (int i = 0; i < nl.getLength(); i++) {
+				Node n = nl.item(i);
+				
+				String cmd = (String) td1.evaluate(n, XPathConstants.STRING);
+				String tgt = (String) td2.evaluate(n, XPathConstants.STRING);
+				String val = (String) td3.evaluate(n, XPathConstants.STRING);
+
+				logger.info("parsed command: " + cmd + " target: " + tgt
+						+ " value: " + val);
+
+				fireCommand(cmd, tgt, val);
+			}
+
 		} catch (XPathExpressionException e) {
 			e.printStackTrace();
 		}
-		
-		// Set technical details //
-		//conf.setSchemas(new String[] { SeleniumModel.idPrefix });
-		conf.setSchemas(new String[] { ID_PREFIX });
-		conf.setEncoding("iso-8859-2");
-		conf.setLang("cs");
-		conf.setPublisher(SOURCE_URL);
-
-		// Build and set source URL list
-		// SimpleDateFormat f = new SimpleDateFormat();
-		// f.applyPattern("dd.MM.yyyy");
-		// String date = f.format(Calendar.getInstance().getTime());
-		conf.setNextPageResolver(new EnumeratedNextPageResolver(SOURCE_URL));
-
-		// Set ID and IRI
-		conf.setId(Utils.getFullId("person"));
-		//conf.setBaseOntoPrefix(SeleniumModel.idPrefix);
-
-		// Get base object (for each tr in table)
-		ClassSpec chObject = Factory.createClassSpec(SeleniumModel.personRecord
-				.getURI());
-		conf.addInitialDefinition(Factory.createInitialDefinition(chObject,
-				Factory.createJSoupSelector("table tr")));
-
-		// Get it's first name spec
-		chObject.addSpec(true, Factory.createDPSpec(
-				Factory.createJSoupSelector("td:eq(0)"),
-				SeleniumModel.hasFirstName.getURI()));
-		chObject.addSpec(true, Factory.createDPSpec(
-				Factory.createJSoupSelector("td:eq(1)"),
-				SeleniumModel.hasFamilyName.getURI()));
-		chObject.addSpec(Factory.createDPSpec(
-				Factory.createJSoupSelector("td:eq(2)"),
-				SeleniumModel.hasPhoneNumber.getURI()));
 
 		return conf;
+	}
+
+	private void fireCommand(String command, String target, String value) {
+		switch (command) {
+		case "owlSetSchemas":
+			// http://kub1x.org/dip/gen/
+			String ID_PREFIX = value;
+			conf.setBaseOntoPrefix(ID_PREFIX);
+			conf.setSchemas(new String[] { ID_PREFIX });
+			break;
+
+		case "owlSetPublisher":
+			conf.setPublisher(value);
+			break;
+
+		case "owlSetNextPageResolver":
+			conf.setNextPageResolver(new EnumeratedNextPageResolver(value));
+			break;
+
+		case "owlSetEncoding":
+			conf.setEncoding(value); // "iso-8859-2"
+			break;
+
+		case "owlSetLang":
+			conf.setLang(value); // "cs"
+			break;
+
+		case "owlSetId":
+			conf.setId(Utils.getFullId(value)); // ex. value: "person"
+			break;
+
+		case "owlCreateChObject":
+			// Get base object (for each tr in table)
+			// ex. value: "personRecord"
+			chObject = Factory.createClassSpec(SeleniumModel
+					.getOntClassForName(value).getURI());
+			// ex. target: "table tr"
+			conf.addInitialDefinition(Factory.createInitialDefinition(chObject,
+					Factory.createJSoupSelector(css2jsoup(target))));
+			break;
+
+		case "owlAddSpec":
+			// Get it's first name spec
+			chObject.addSpec(true, Factory.createDPSpec(
+					Factory.createJSoupSelector(css2jsoup(target)),
+					SeleniumModel.getOntPropertyForName(value).getURI()));
+			// chObject.addSpec(true, Factory.createDPSpec(
+			// Factory.createJSoupSelector("td:eq(0)"),
+			// SeleniumModel.hasFirstName.getURI()));
+			// chObject.addSpec(true, Factory.createDPSpec(
+			// Factory.createJSoupSelector("td:eq(1)"),
+			// SeleniumModel.hasFamilyName.getURI()));
+			// chObject.addSpec(Factory.createDPSpec(
+			// Factory.createJSoupSelector("td:eq(2)"),
+			// SeleniumModel.hasPhoneNumber.getURI()));
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	private String css2jsoup(String target) {
+		if (target.startsWith("css="))
+			target = target.replaceFirst("css=", "");
+		return target;
 	}
 
 }
