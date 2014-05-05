@@ -1,6 +1,6 @@
 package cz.sio2.crowler;
 
-import cz.sio2.crowler.configurations.parser.SeleniumConfiguration;
+import cz.sio2.crowler.configurations.json.JsonConfiguration;
 import cz.sio2.crowler.connectors.FileJenaConnector;
 import cz.sio2.crowler.connectors.SesameJenaConnector;
 import cz.sio2.crowler.model.ConfigurationFactory;
@@ -19,7 +19,7 @@ public class Runner {
 		// try {
 		if (!Arrays.asList(new String[] { "file", "sesame" }).contains(args[1])) {
 			System.out
-					.println("Usage: Runner <CONFIGURATION_CLASS> (file dirname) | (sesame serverurl repositoryid) [selenium_conf_file]>");
+					.println("Usage: Runner <CONFIGURATION_CLASS> (file dirname) | (sesame serverurl repositoryid) [json_conf_file]>");
 			System.exit(0);
 		}
 		// } catch (ArrayIndexOutOfBoundsException ex) {
@@ -48,13 +48,14 @@ public class Runner {
 			final ConfigurationFactory conf_fact = (ConfigurationFactory) Class
 					.forName(args[0]).newInstance();
 			// if we are in selenium, we need to load scripts
-			if (args[0].contains("SeleniumConfiguration")) {
-				List<File> scripts = new ArrayList<File>();
-				//TODO starting from 2 for "file" option.. for "sesame" it will be 4
-				for (int i = 3; i < args.length; i++) {
-					scripts.add(new File(args[i]));
-				}
-				((SeleniumConfiguration) conf_fact).setStcripts(scripts);
+			if (args[0].contains("JsonConfiguration")) {
+//				List<File> scripts = new ArrayList<File>();
+//				//TODO starting from 2 for "file" option.. for "sesame" it will be 4
+//				for (int i = 3; i < args.length; i++) {
+//					scripts.add(new File(args[i]));
+//				}
+//				((SeleniumConfiguration) conf_fact).setStcripts(scripts);
+				((JsonConfiguration) conf_fact).setScenario(new File(args[3]));
 			}
 			new FullCrawler(connector).run(conf_fact
 					.getConfiguration(new HashMap(System.getProperties())));
