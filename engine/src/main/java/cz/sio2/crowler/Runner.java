@@ -1,21 +1,21 @@
 package cz.sio2.crowler;
 
+import java.io.File;
+import java.util.Arrays;
+import java.util.HashMap;
+
 import cz.sio2.crowler.configurations.json.JsonConfiguration;
 import cz.sio2.crowler.connectors.FileJenaConnector;
 import cz.sio2.crowler.connectors.SesameJenaConnector;
 import cz.sio2.crowler.model.ConfigurationFactory;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
 
 public class Runner {
 
 	public static void main(String[] args) {
-
+		System.out.println("Working Directory = " +
+	              System.getProperty("user.dir"));
+		
 		// try {
 		if (!Arrays.asList(new String[] { "file", "sesame" }).contains(args[1])) {
 			System.out

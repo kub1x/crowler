@@ -620,14 +620,14 @@
   "selector":"table tbody tr",
   "children":[
     {"resource":"http://xmlns.com/foaf/0.1/firstName",
-     "selector":"td:eq(1)",
+     "selector":"td:eq(0)",
      "children":[]},
 
     {"resource":"http://xmlns.com/foaf/0.1/lastName",
-    "selector":"td:eq(2)",
+    "selector":"td:eq(1)",
     "children":[]},
     {"resource":"http://xmlns.com/foaf/0.1/phone",
-    "selector":"td:eq(3)",
+    "selector":"td:eq(2)",
     "children":[]}
     ]}
     ]}

@@ -9,6 +9,8 @@ import java.util.Map;
 import org.openjena.atlas.json.JSON;
 import org.openjena.atlas.json.JsonArray;
 import org.openjena.atlas.json.JsonObject;
+import org.openjena.atlas.json.JsonString;
+import org.openjena.atlas.json.JsonValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,9 +21,11 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 import cz.sio2.crowler.Factory;
 import cz.sio2.crowler.Utils;
+import cz.sio2.crowler.configurations.kub1x.KbxModel;
 import cz.sio2.crowler.model.ClassSpec;
 import cz.sio2.crowler.model.Configuration;
 import cz.sio2.crowler.model.ConfigurationFactory;
+import cz.sio2.crowler.model.EnumeratedNextPageResolver;
 import cz.sio2.crowler.model.PropertyType;
 
 public class JsonConfiguration implements ConfigurationFactory {
@@ -30,8 +34,8 @@ public class JsonConfiguration implements ConfigurationFactory {
 	private Logger logger = LoggerFactory.getLogger(JsonConfiguration.class
 			.getName());
 
-	// final String SOURCE_URL = "http://www.inventati.org/kub1x/t/";
-	String SOURCE_URL = "";// "http://localhost:8888/";
+	final String SOURCE_URL = "http://www.inventati.org/kub1x/t/";
+	// String SOURCE_URL = "";// "http://localhost:8888/";
 
 	File scenario;
 
@@ -77,7 +81,7 @@ public class JsonConfiguration implements ConfigurationFactory {
 	Map<String, OntProperty> properties = new HashMap<>();
 
 	// ---------------------------------------------------------------------------------------------
-	
+
 	final String CLASSES = "classes";
 	final String PROPERTIES = "properties";
 	final String STEPS = "steps";
@@ -88,9 +92,26 @@ public class JsonConfiguration implements ConfigurationFactory {
 	final String CHILDREN = "children";
 
 	void parseScenario(JsonObject jsc, Configuration conf) {
+		// Parse model
 		parseClasses((JsonArray) jsc.get(CLASSES));
 		parseProperties((JsonArray) jsc.get(PROPERTIES));
-		parseSteps((JsonArray) jsc.get(CLASSES), conf);
+		// Parse steps
+		parseSteps((JsonArray) jsc.get(STEPS), conf);
+		// Parse ontology setting
+		final String idPrefix = "http://xmlns.com/foaf/0.1/";
+		conf.setNextPageResolver(new EnumeratedNextPageResolver(SOURCE_URL));
+		// TODO from settings
+		conf.setSchemas(new String[] { idPrefix });
+		// TODO from settings
+		conf.setEncoding("iso-8859-2");
+		// TODO from settings
+		conf.setLang("cs");
+		// TODO from settings
+		conf.setPublisher(SOURCE_URL);
+		// TODO from settings
+		conf.setId(Utils.getFullId("person"));
+		// TODO from settings
+		conf.setBaseOntoPrefix(idPrefix);
 	}
 
 	private void parseClasses(JsonArray aClasses) {
@@ -147,6 +168,11 @@ public class JsonConfiguration implements ConfigurationFactory {
 		conf.addInitialDefinition(Factory.createInitialDefinition(classSpec,
 				Factory.createJSoupSelector(selector)));
 
+		logger.debug("parsed class spec with IRI: " + iri + ", selector: "
+				+ selector);
+		System.out.println("parsed class spec with IRI: " + iri
+				+ ", selector: " + selector);
+
 		JsonArray children = (JsonArray) aStep.get(CHILDREN);
 
 		for (int i = 0; i < children.size(); i++) {
@@ -159,6 +185,11 @@ public class JsonConfiguration implements ConfigurationFactory {
 		boolean isPartOfId = true; // TODO we need this prop
 		String iri = getString(aStep, RESOURCE);
 		String selector = getString(aStep, SELECTOR);
+
+		logger.debug("parsed spec with iri: " + iri + ", and selector: "
+				+ selector);
+		System.out.println("parsed spec with iri: " + iri + ", and selector: "
+				+ selector);
 
 		classSpec.addSpec(isPartOfId, Factory.createDPSpec(
 				Factory.createJSoupSelector(selector), iri));
@@ -174,9 +205,11 @@ public class JsonConfiguration implements ConfigurationFactory {
 	}
 
 	// ---------------------------------------------------------------------------------------------
-	
-	String getString(JsonObject o, String p) {
-		return o.get(p).getAsString().value();
+
+	private String getString(JsonObject o, String p) {
+		JsonValue v = o.get(p);
+		JsonString s = v.getAsString();
+		return s.value();
 	}
 
 }
