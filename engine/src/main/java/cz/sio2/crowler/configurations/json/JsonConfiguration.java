@@ -93,8 +93,8 @@ public class JsonConfiguration implements ConfigurationFactory {
 
 	void parseScenario(JsonObject jsc, Configuration conf) {
 		// Parse model
-		parseClasses((JsonArray) jsc.get(CLASSES));
-		parseProperties((JsonArray) jsc.get(PROPERTIES));
+		// parseClasses((JsonArray) jsc.get(CLASSES));
+		// parseProperties((JsonArray) jsc.get(PROPERTIES));
 		// Parse steps
 		parseSteps((JsonArray) jsc.get(STEPS), conf);
 		// Parse ontology setting
