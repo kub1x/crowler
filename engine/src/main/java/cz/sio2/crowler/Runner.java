@@ -1,6 +1,10 @@
 package cz.sio2.crowler;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -9,17 +13,20 @@ import cz.sio2.crowler.connectors.FileJenaConnector;
 import cz.sio2.crowler.connectors.SesameJenaConnector;
 import cz.sio2.crowler.model.ConfigurationFactory;
 
-
 public class Runner {
 
 	public static void main(String[] args) {
-		System.out.println("Working Directory = " +
-	              System.getProperty("user.dir"));
-		
+		String jarDir = teeOutputs(args);
+
+		System.out.println("Working Directory = "
+				+ System.getProperty("user.dir"));
+
+		System.out.println("Jar directory = " + jarDir);
+
 		// try {
 		if (!Arrays.asList(new String[] { "file", "sesame" }).contains(args[1])) {
 			System.out
-					.println("Usage: Runner <CONFIGURATION_CLASS> (file dirname) | (sesame serverurl repositoryid) [json_conf_file]>");
+					.println("Usage: Runner <CONFIGURATION_CLASS> (file <dirname>) | (sesame <serverurl> <repositoryid>) [json_conf_file]>");
 			System.exit(0);
 		}
 		// } catch (ArrayIndexOutOfBoundsException ex) {
@@ -28,10 +35,12 @@ public class Runner {
 		// System.exit(0);
 		// }
 
+		// TODO really need parser for arguments.. it's starting to get messy
+
 		JenaConnector connector = null;
 
 		if ("file".equals(args[1])) {
-			connector = new FileJenaConnector(new File(args[2]), false);
+			connector = new FileJenaConnector(new File(jarDir, args[2]), false);
 		} else if ("sesame".equals(args[1])) {
 			XTrustProvider.install();
 			final SesameJenaConnector cx = new SesameJenaConnector();
@@ -49,13 +58,7 @@ public class Runner {
 					.forName(args[0]).newInstance();
 			// if we are in selenium, we need to load scripts
 			if (args[0].contains("JsonConfiguration")) {
-//				List<File> scripts = new ArrayList<File>();
-//				//TODO starting from 2 for "file" option.. for "sesame" it will be 4
-//				for (int i = 3; i < args.length; i++) {
-//					scripts.add(new File(args[i]));
-//				}
-//				((SeleniumConfiguration) conf_fact).setStcripts(scripts);
-				((JsonConfiguration) conf_fact).setScenario(new File(args[3]));
+				((JsonConfiguration) conf_fact).setScenario(new File(jarDir, "scenario.json"));
 			}
 			new FullCrawler(connector).run(conf_fact
 					.getConfiguration(new HashMap(System.getProperties())));
@@ -66,5 +69,38 @@ public class Runner {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * 
+	 * for obtaining the path of jar-ball (that contains this program) from
+	 * inside see:
+	 * http://stackoverflow.com/questions/320542/how-to-get-the-path-
+	 * of-a-running-jar-file#12733172
+	 * https://weblogs.java.net/blog/kohsuke/archive/2007/04/how_to_convert.html
+	 * 
+	 * @return
+	 */
+	private static String teeOutputs(String[] args) {
+		// jarDir = System.getProperty("user.dir");
+		// URL url = Runner.class.getProtectionDomain().getCodeSource()
+		// .getLocation();
+		// try {
+		// jarDir = new File(url.toURI()).getParentFile().getPath();
+		// } catch (URISyntaxException e2) {
+		// jarDir = new File(url.getPath()).getParentFile().getPath();
+		// }
+
+		String jarDir = args[args.length - 1];
+
+		try {
+			System.setOut(new PrintStream(new File(jarDir, "./log.out")));
+			System.setErr(new PrintStream(new File(jarDir, "./log.err")));
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		return jarDir;
 	}
 }
