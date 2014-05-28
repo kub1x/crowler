@@ -120,6 +120,20 @@ public class Crowler {
                     set.add(resolve(baseURL, eValue, (ClassSpec) propertySpecIF.getObjectSpec()));
                 } else if (PropertyType.DATA.equals(propertySpecIF.getType())) {
                     set.add(create((String) propertySpecIF.getObjectSpec(),eValue.text()));
+                    // Create following structure:
+                    //
+                    // <owl:Axiom>
+					// <owl:annotatedTarget>{resolved text}</owl:annotatedTarget>
+					// <kbx:selector>{CSS selector}</kbx:selector>
+					// <owl:annotatedProperty rdf:resource="{property IRI}"/>
+					// <owl:annotatedSource rdf:resource="{source object IRI}"/>
+					// </owl:Axiom>
+                    //
+                    // Where kbx is technical annotation used for backward visualization.
+                    //
+                    // NOTE: We don't know the {source object IRI} yet, because it is composed
+                    //   of some properties values. We have to store these asioms and add them 
+                    //   all together at the end. 
                 } else if (PropertyType.ANNOTATION.equals(propertySpecIF.getType())) {
                     set.add(create((String) propertySpecIF.getObjectSpec(), eValue.text()));
                 }
