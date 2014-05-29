@@ -54,6 +54,21 @@ public class Crowler {
         try {
             final Document doc = parse(conf.getEncoding(),baseURL,physicalURL);
             final Elements el = initialDefinitionIF.getSelector().resolve(doc);
+            
+            //NOTE: for backward visualization of these elements (in variable el)
+            // we need to add two things into the ontology:
+            // * some reference to the original selector:
+            //   * sele = initialDefinitionIF.getSelector().toString()  
+            //     i.e. the selector as it is in the scenario, e.g. "tbody tr"
+            //   * orig = initialDefinitionIF.getSelector().getOrigin()
+            //     i.e. the address of the selector in the scenario, e.g.: "scenario steps:eq(10) selector"
+            //     * note that it's a plan to carry the origin of the selector along with it, it shall be
+            //       assigned during parsing
+            // * the EXACT selector of this particular node (from the set `el') we're about to crawl
+            //   * this selector has to be resolved the same way SelectOWL generates
+            //     it's initial selectors e.g. "tbody tr:eq(0)"
+            //
+            
             for (Iterator<Element> i = el.iterator(); i.hasNext(); ) {
                 resolve(baseURL, i.next(), initialDefinitionIF.getClassSpec());
             }
