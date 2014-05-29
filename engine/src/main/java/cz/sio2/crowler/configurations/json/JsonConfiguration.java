@@ -98,7 +98,7 @@ public class JsonConfiguration implements ConfigurationFactory {
 		// Parse steps
 		parseSteps((JsonArray) jsc.get(STEPS), conf);
 		// Parse ontology setting
-		final String idPrefix = "http://xmlns.com/foaf/0.1/";
+		final String idPrefix = "http://kub1x.org/dip/"; //"http://xmlns.com/foaf/0.1/";
 		conf.setNextPageResolver(new EnumeratedNextPageResolver(SOURCE_URL));
 		// TODO from settings
 		conf.setSchemas(new String[] { idPrefix });
