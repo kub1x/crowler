@@ -64,5 +64,5 @@ public class JSoupSelector extends Selector {
     public String toString() {
     	return this.selectionString;
     }
-    }
+    
 }
