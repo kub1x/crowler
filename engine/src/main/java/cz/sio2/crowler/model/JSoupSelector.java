@@ -59,4 +59,10 @@ public class JSoupSelector extends Selector {
         result = 31 * result + i;
         return result;
     }
+    
+    @Override
+    public String toString() {
+    	return this.selectionString;
+    }
+    }
 }
