@@ -10,18 +10,19 @@ import java.util.List;
  * @author kub1x
  *
  */
-public class OntoElemStep extends Step {
+public class OntoElemStep extends Step implements WithSubsteps {
 
     // TODO change type to URI
     private String typeof;
     private String selector;
     private String rel;
-    private List<Step> children;
+    private List<Step> substeps;
 
     // -------------------------------------------------------------------------
 
     public OntoElemStep() {
         this.setCommand(Command.ONTO_ELEM);
+        this.substeps = new ArrayList<>();
     }
 
     // -------------------------------------------------------------------------
@@ -50,21 +51,19 @@ public class OntoElemStep extends Step {
         this.rel = rel;
     }
 
-    public List<Step> getChildren() {
-        return children;
+    @Override
+    public List<Step> getSteps() {
+        return this.substeps;
     }
 
-    public void setChildren(List<Step> children) {
-        this.children = children;
+    @Override
+    public void setSteps(List<Step> steps) {
+        this.substeps = steps;
     }
 
-    // -------------------------------------------------------------------------
-
-    public void addChildren(Step step) {
-        if (this.children == null) {
-            this.children = new ArrayList<>();
-        }
-        this.children.add(step);
+    @Override
+    public void addStep(Step step) {
+        this.substeps.add(step);
     }
 
 }

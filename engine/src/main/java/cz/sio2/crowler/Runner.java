@@ -1,7 +1,9 @@
 package cz.sio2.crowler;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
+import org.json.JSONException;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -23,6 +25,7 @@ public class Runner {
 
     // @Option(name = "--confClass", usage="class of configuration to be used")
     // private String confClass = null;
+    // //e.g.: --confClass cz.sio2.crowler.configurations.json.JsonConfiguration
 
     @Option(name = "--rdfDir", usage = "print output as RDF files into directory specified by this argument (currently default, required)")
     private String rdfDir = null;
@@ -38,14 +41,13 @@ public class Runner {
     // "flag if selenium crowling is to be used (currently default)")
     // private boolean selenium = true;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException, JSONException {
         new Runner().doMain(args);
     }
 
-    public void doMain(String[] args) {
+    public void doMain(String[] args) throws FileNotFoundException, JSONException {
 
-        System.out.println("Working Directory = "
-                + System.getProperty("user.dir"));
+        System.out.println("Working Directory = " + System.getProperty("user.dir"));
 
         // System.out.println("Jar directory = " + jarDir);
 
@@ -61,14 +63,16 @@ public class Runner {
             // you'll get this exception. this will report
             // an error message.
             System.err.println(e.getMessage());
-            System.err
-                    .println("usage: java -jar crowler.jar [args - see below]");
+            System.err.println("usage: java -jar crowler.jar [args - see below]");
             // print the list of available options
             parser.printUsage(System.err);
             System.err.println();
 
             return;
         }
+
+        System.out.println("DEBUG rdfDir: " + rdfDir);
+        System.out.println("DEBUG scenarioPath: " + scenarioPath);
 
         JenaConnector connector = null;
 
@@ -89,9 +93,13 @@ public class Runner {
         // connector = cx;
         // }
 
+        System.out.println("DEBUG - parsing");
+
         // Parse scenario
         // Scenario scenario = Scenario.parse(scenarioPath);
         Scenario scenario = JsonScenarioParser.parse(scenarioPath);
+
+        System.out.println("DEBUG - running WebDriverCrawler");
 
         // Run crowler
         WebDriverCrawler wdc = new WebDriverCrawler(connector, scenario);
@@ -110,6 +118,8 @@ public class Runner {
         // } catch (IllegalAccessException e) {
         // e.printStackTrace();
         // }
+
+        System.out.println("DEBUG - finished");
     }
 
 }

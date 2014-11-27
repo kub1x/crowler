@@ -24,6 +24,7 @@ public class JsonScenarioParser {
     final static Charset ENCODING = StandardCharsets.UTF_8;
 
     // scenario
+    private final static String URL_KEY = "url";
     private final static String STEPS_KEY = "steps";
 
     // step
@@ -32,6 +33,10 @@ public class JsonScenarioParser {
     private static final String REL_KEY = "rel";
     private static final String SELECTOR_KEY = "selector";
     private static final String PROPERTY_KEY = "property";
+
+    // selector
+    private static final String VALUE_KEY = "value";
+    private static final String TYPE_KEY = "key";
 
     /**
      * Private constructor.
@@ -68,13 +73,22 @@ public class JsonScenarioParser {
     // -------------------------------------------------------------------------
 
     private static void populate(Scenario result, JSONObject json) throws JSONException {
+        result.setUrl(getStringPropertyOrEmpty(json, URL_KEY));
+        populateSubSteps(result, json);
+    }
+
+    private static void populateSubSteps(WithSubsteps result, JSONObject json) {
         JSONArray steps = json.getJSONArray(STEPS_KEY);
+
+        if (steps == null) {
+            return;
+        }
+
         for (int i = 0; i < steps.length(); i++) {
             JSONObject jsonStep = (JSONObject) steps.get(i);
             Step step = parseStep(jsonStep);
             result.addStep(step);
         }
-
     }
 
     private static Step parseStep(JSONObject jsonStep) throws JSONException {
@@ -87,6 +101,7 @@ public class JsonScenarioParser {
 
         case VALUE_OF:
             result = populate(new ValueOfStep(), jsonStep);
+            break;
 
         default:
             throw new RuntimeException("Unnown or unimplemented command: " + command);
@@ -99,15 +114,22 @@ public class JsonScenarioParser {
 
     private static Step populate(ValueOfStep valueOfStep, JSONObject jsonStep) {
         valueOfStep.setProperty(getStringPropertyOrEmpty(jsonStep, PROPERTY_KEY));
-        valueOfStep.setSelector(getStringPropertyOrEmpty(jsonStep, SELECTOR_KEY));
+        valueOfStep.setSelector(getSelector(jsonStep));
         return valueOfStep;
     }
 
     private static Step populate(OntoElemStep ontoElemStep, JSONObject jsonStep) {
         ontoElemStep.setTypeof(getStringPropertyOrEmpty(jsonStep, TYPEOF_KEY));
         ontoElemStep.setRel(getStringPropertyOrEmpty(jsonStep, REL_KEY));
-        ontoElemStep.setSelector(getStringPropertyOrEmpty(jsonStep, SELECTOR_KEY));
+        ontoElemStep.setSelector(getSelector(jsonStep));
+        populateSubSteps(ontoElemStep, jsonStep);
         return ontoElemStep;
+    }
+
+    private static String getSelector(JSONObject jsonStep) {
+        JSONObject jsonSelector = jsonStep.getJSONObject(SELECTOR_KEY);
+        // TODO we ignore the "type" here as it's always JSOUP now
+        return getStringPropertyOrEmpty(jsonSelector, VALUE_KEY);
     }
 
     // -------------------------------------------------------------------------
@@ -121,7 +143,7 @@ public class JsonScenarioParser {
      */
     private static String getStringPropertyOrEmpty(JSONObject obj, String key) {
         try {
-            if (obj.has(key)) {
+            if (obj != null && obj.has(key)) {
                 return obj.getString(key);
             } else {
                 return "";
