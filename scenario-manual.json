@@ -1,0 +1,45 @@
+{
+  type: "scenario", 
+  name: "manual", 
+  url: "http://www.inventati.org/kub1x/t/", 
+  ontology: {
+    base: "http://kub1x.org/onto/dip/t/", 
+  }, 
+  creationDate: "2014-11-26 9:40", 
+  steps: [
+    {
+      command: "onto-elem", 
+      typeof: "foaf:Person", 
+      selector: {
+        value: "tr", 
+        type: "jsoup", 
+      }, 
+      steps: [
+        {
+          command: "value-of", 
+          property: "foaf:firstName", 
+          selector: {
+            value: "td:nth-child(1)", 
+            type: "css", 
+          }, 
+        }, 
+        {
+          command: "value-of", 
+          property: "foaf:lastName", 
+          selector: {
+            value: "td:nth-child(2)", 
+            type:  "css", 
+          }, 
+        }, 
+        {
+          command: "value-of", 
+          property: "foaf:phone", 
+          selector: {
+            value: "td:nth-child(3)", 
+            type:  "css", 
+          }, 
+        }, 
+      ], 
+    }, 
+  ], 
+}
