@@ -20,8 +20,12 @@ public class WebContext {
         this.wd = new FirefoxDriver();
     }
 
-    public void init(String url) {
-        // this.wd.manage().window().maximize();
+    // public void init(String url) {
+    // // this.wd.manage().window().maximize();
+    // this.wd.navigate().to(url);
+    // }
+
+    public void goTo(String url) {
         this.wd.navigate().to(url);
     }
 

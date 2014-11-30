@@ -3,14 +3,32 @@
  */
 package cz.sio2.crowler.scenario;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
+ * Inner representation for Scenario object.
+ * 
+ * <code>
+ * {
+ *   name: "<String: scenario.name>", 
+ *   ontology: {<OntologyConfig: scenario.ontologyConfiguration>}, 
+ *   creation-date: "<Date: scenario.creationDate>", 
+ *   call-template: {<CallTemplateStep: scenario.initCallTemplate>}, 
+ *   templates: [<ScenarioTemplate: scenario.templates>], 
+ * }
+ * 
  * @author kub1x
- *
+ * 
  */
-public class Scenario implements WithSubsteps {
+public class Scenario {
+
+    private String name;
+    private OntologyConfig ontologyConfig;
+    private CallTemplateStep initCallTemplate;
+    private Map<String, Template> templates;
+
+    // -------------------------------------------------------------------------
 
     /**
      * Constructor.
@@ -19,8 +37,7 @@ public class Scenario implements WithSubsteps {
      */
     public Scenario(String name) {
         this.name = name;
-        this.steps = new ArrayList<>();
-        this.imports = new ArrayList<>();
+        this.templates = new HashMap<>();
     }
 
     /**
@@ -32,21 +49,6 @@ public class Scenario implements WithSubsteps {
 
     // -------------------------------------------------------------------------
 
-    private String url;
-    private String name;
-    private List<Step> steps;
-    private List<String> imports;
-
-    // -------------------------------------------------------------------------
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public String getName() {
         return name;
     }
@@ -55,34 +57,48 @@ public class Scenario implements WithSubsteps {
         this.name = name;
     }
 
-    public List<Step> getSteps() {
-        return steps;
+    public OntologyConfig getOntologyConfig() {
+        return ontologyConfig;
     }
 
-    public void setSteps(List<Step> steps) {
-        this.steps = steps;
+    public void setOntologyConfig(OntologyConfig ontologyConfig) {
+        this.ontologyConfig = ontologyConfig;
     }
 
-    public void addStep(Step step) {
-        if (this.steps == null) {
-            this.steps = new ArrayList<>();
+    public CallTemplateStep getInitCallTemplate() {
+        return initCallTemplate;
+    }
+
+    public void setInitCallTemplate(CallTemplateStep initCallTemplate) {
+        this.initCallTemplate = initCallTemplate;
+    }
+
+    public Map<String, Template> getTemplates() {
+        return templates;
+    }
+
+    public void setTemplates(Map<String, Template> templates) {
+        this.templates = templates;
+    }
+
+    public void addTemplate(Template template) {
+        if (template == null) {
+            return;
         }
-        this.steps.add(step);
-    }
-
-    public List<String> getImports() {
-        return imports;
-    }
-
-    public void setImports(List<String> imports) {
-        this.imports = imports;
-    }
-
-    public void addImport(String iri) {
-        if (this.imports == null) {
-            this.imports = new ArrayList<>();
+        if (this.templates == null) {
+            this.templates = new HashMap<>();
         }
-        this.imports.add(iri);
+        if (this.templates.containsKey(template.getName())) {
+            throw new RuntimeException("Duplicit template name: " + template.getName());
+        }
+        this.templates.put(template.getName(), template);
+    }
+
+    public Template findTemplate(String name) {
+        if (this.templates == null) {
+            return null;
+        }
+        return this.templates.get(name);
     }
 
     // -------------------------------------------------------------------------

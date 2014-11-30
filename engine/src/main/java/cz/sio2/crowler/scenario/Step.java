@@ -7,7 +7,7 @@ package cz.sio2.crowler.scenario;
  * @author kub1x
  *
  */
-public class Step {
+public abstract class Step {
 
     /**
      * Determine class of the step by it's command property.
@@ -48,6 +48,7 @@ public class Step {
         }
     }
 
+    // -------------------------------------------------------------------------
     // -------------------------------------------------------------------------
 
     private Command command;

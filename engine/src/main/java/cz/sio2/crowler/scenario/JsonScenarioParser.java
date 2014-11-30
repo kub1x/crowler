@@ -6,8 +6,6 @@ package cz.sio2.crowler.scenario;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,11 +18,26 @@ import org.json.JSONTokener;
  */
 public class JsonScenarioParser {
 
-    //
-    final static Charset ENCODING = StandardCharsets.UTF_8;
-
     // scenario
+    private static final String NAME_KEY = "name";
+    private static final String ONTOLOGY_KEY = "ontology";
+    private static final String CALL_TEMPLATE_KEY = "call-template";
+    private static final String TEMPLATES_KEY = "templates";
+
+    // ontology
+    private static final String BASE_KEY = "base";
+    private static final String IMPORTS_KEY = "imports";
+
+    // import
+    private static final String PREFIX_KEY = "prefix";
+    private static final String URI_KEY = "uri";
+
+    // call -template
+    // NAME_KEY - from scenario
     private final static String URL_KEY = "url";
+
+    // template
+    // NAME_KEY - from scenario
     private final static String STEPS_KEY = "steps";
 
     // step
@@ -36,7 +49,8 @@ public class JsonScenarioParser {
 
     // selector
     private static final String VALUE_KEY = "value";
-    private static final String TYPE_KEY = "key";
+
+    // private static final String TYPE_KEY = "key";
 
     /**
      * Private constructor.
@@ -72,10 +86,46 @@ public class JsonScenarioParser {
 
     // -------------------------------------------------------------------------
 
-    private static void populate(Scenario result, JSONObject json) throws JSONException {
-        result.setUrl(getStringPropertyOrEmpty(json, URL_KEY));
-        populateSubSteps(result, json);
+    private static void populate(Scenario scenario, JSONObject jsonScenario) throws JSONException {
+        scenario.setName(getStringPropertyOrEmpty(jsonScenario, NAME_KEY));
+        scenario.setInitCallTemplate((CallTemplateStep) parseStep(jsonScenario.getJSONObject(CALL_TEMPLATE_KEY)));
+        scenario.setOntologyConfig(parseOntologyConfig(jsonScenario));
+        populateTemplates(scenario, jsonScenario);
     }
+
+    // -------------------------------------------------------------------------
+
+    private static OntologyConfig parseOntologyConfig(JSONObject jsonScenario) {
+        JSONObject jsonOntologyConfig = jsonScenario.getJSONObject(ONTOLOGY_KEY);
+        OntologyConfig ontologyConfig = new OntologyConfig();
+        ontologyConfig.setBase(getStringPropertyOrEmpty(jsonOntologyConfig, BASE_KEY));
+        populateImports(ontologyConfig, jsonOntologyConfig);
+        return ontologyConfig;
+    }
+
+    private static void populateImports(OntologyConfig ontologyConfig, JSONObject jsonOntologyConfig) {
+        JSONArray imports = jsonOntologyConfig.getJSONArray(IMPORTS_KEY);
+        for (int i = 0; i < imports.length(); i++) {
+            JSONObject jsonImport = imports.getJSONObject(i);
+            ontologyConfig.putImport(getStringPropertyOrEmpty(jsonImport, PREFIX_KEY), getStringPropertyOrEmpty(jsonImport, URI_KEY));
+        }
+    }
+
+    // -------------------------------------------------------------------------
+
+    private static void populateTemplates(Scenario scenario, JSONObject jsonScenario) {
+        JSONArray templates = jsonScenario.getJSONArray(TEMPLATES_KEY);
+        for (int i = 0; i < templates.length(); i++) {
+            JSONObject jsonTemplate = templates.getJSONObject(i);
+            Template template = new Template();
+            template.setName(getStringPropertyOrEmpty(jsonTemplate, NAME_KEY));
+            populateSubSteps(template, jsonTemplate);
+            scenario.addTemplate(template);
+        }
+
+    }
+
+    // -------------------------------------------------------------------------
 
     private static void populateSubSteps(WithSubsteps result, JSONObject json) {
         JSONArray steps = json.getJSONArray(STEPS_KEY);
@@ -103,6 +153,10 @@ public class JsonScenarioParser {
             result = populate(new ValueOfStep(), jsonStep);
             break;
 
+        case CALL_TEMPLATE:
+            result = populate(new CallTemplateStep(), jsonStep);
+            break;
+
         default:
             throw new RuntimeException("Unnown or unimplemented command: " + command);
         }
@@ -112,12 +166,6 @@ public class JsonScenarioParser {
 
     // -------------------------------------------------------------------------
 
-    private static Step populate(ValueOfStep valueOfStep, JSONObject jsonStep) {
-        valueOfStep.setProperty(getStringPropertyOrEmpty(jsonStep, PROPERTY_KEY));
-        valueOfStep.setSelector(getSelector(jsonStep));
-        return valueOfStep;
-    }
-
     private static Step populate(OntoElemStep ontoElemStep, JSONObject jsonStep) {
         ontoElemStep.setTypeof(getStringPropertyOrEmpty(jsonStep, TYPEOF_KEY));
         ontoElemStep.setRel(getStringPropertyOrEmpty(jsonStep, REL_KEY));
@@ -126,9 +174,23 @@ public class JsonScenarioParser {
         return ontoElemStep;
     }
 
+    private static Step populate(ValueOfStep valueOfStep, JSONObject jsonStep) {
+        valueOfStep.setProperty(getStringPropertyOrEmpty(jsonStep, PROPERTY_KEY));
+        valueOfStep.setSelector(getSelector(jsonStep));
+        return valueOfStep;
+    }
+
+    private static Step populate(CallTemplateStep callTemplateStep, JSONObject jsonStep) {
+        callTemplateStep.setTemplateName(getStringPropertyOrEmpty(jsonStep, NAME_KEY));
+        callTemplateStep.setUrl(getStringPropertyOrEmpty(jsonStep, URL_KEY));
+        return callTemplateStep;
+    }
+
+    // -------------------------------------------------------------------------
+
     private static String getSelector(JSONObject jsonStep) {
         JSONObject jsonSelector = jsonStep.getJSONObject(SELECTOR_KEY);
-        // TODO we ignore the "type" here as it's always JSOUP now
+        // TODO we ignore the "type" here as it's always CSS now
         return getStringPropertyOrEmpty(jsonSelector, VALUE_KEY);
     }
 

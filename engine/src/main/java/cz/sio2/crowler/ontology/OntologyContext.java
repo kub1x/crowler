@@ -44,6 +44,10 @@ public class OntologyContext {
         this.cache = new ResourceCache();
     }
 
+    public void setPrefix(String prefix, String uri) {
+        this.model.setNsPrefix(prefix, uri);
+    }
+
     public Individual createEmptyIndividual(String id, OntClass clazz) {
         if (id == null) {
             id = "indiv" + getCurrentTimeStamp();
@@ -114,6 +118,8 @@ public class OntologyContext {
         // Persist
         final Model persistModel = this.connector.getModel(this.ontologyId);
         persistModel.add(model);
+        // copy (yep.. this doest only copy) the prefixes from OntModel into Jena Model
+        persistModel.setNsPrefixes(model.getNsPrefixMap());
         this.connector.closeModel(persistModel);
 
         this.connector.disconnect();

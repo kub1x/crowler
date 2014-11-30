@@ -1,6 +1,7 @@
 package cz.sio2.crowler.selenium;
 
 import java.util.List;
+import java.util.Map;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -15,9 +16,12 @@ import cz.sio2.crowler.JenaConnector;
 import cz.sio2.crowler.Vocabulary;
 import cz.sio2.crowler.model.PropertyType;
 import cz.sio2.crowler.ontology.OntologyContext;
+import cz.sio2.crowler.scenario.CallTemplateStep;
 import cz.sio2.crowler.scenario.OntoElemStep;
+import cz.sio2.crowler.scenario.OntologyConfig;
 import cz.sio2.crowler.scenario.Scenario;
 import cz.sio2.crowler.scenario.Step;
+import cz.sio2.crowler.scenario.Template;
 import cz.sio2.crowler.scenario.ValueOfStep;
 
 public class WebDriverCrawler {
@@ -26,15 +30,14 @@ public class WebDriverCrawler {
     private Scenario scenario;
 
     private OntologyContext ontology;
-    private WebContext web;
 
     public WebDriverCrawler(JenaConnector connector, Scenario scenario) {
         this.scenario = scenario;
         this.ontology = new OntologyContext(connector);
-        this.web = new WebContext();
     }
 
     private final static Individual NO_PARENT = null;
+    private static final WebElement NO_CONTEXT = null;
 
     public void doIt() {
         if (logger.isTraceEnabled()) {
@@ -42,27 +45,53 @@ public class WebDriverCrawler {
         }
 
         this.ontology.init(scenario.getName());
-        this.web.init(scenario.getUrl());
 
         // -----------------------------------
 
-        // TODO Potrebujeme seznam importu e.x.:
-        // http://onto.mondis.cz/resource/npu/
-        for (final String importIri : scenario.getImports()) {
-            ontology.addImport(importIri);
+        OntologyConfig ontologyConfig = scenario.getOntologyConfig();
+
+        if (ontologyConfig != null) {
+            // TODO Potrebujeme seznam importu
+            // e.x.: http://onto.mondis.cz/resource/npu/
+            Map<String, String> imports = ontologyConfig.getImports();
+            for (final String prefix : imports.keySet()) {
+                String uri = imports.get(prefix);
+                ontology.addImport(uri);
+                ontology.setPrefix(prefix, uri);
+                System.out.println("adding prefix: " + prefix + ":" + uri);
+            }
         }
 
         // -----------------------------------
 
-        handleSteps(scenario.getSteps(), NO_PARENT, this.web.getBody());
+        handleStep(scenario.getInitCallTemplate(), NO_PARENT, NO_CONTEXT);
 
         // -----------------------------------
 
         this.ontology.close();
-        this.web.close();
 
     }
 
+    private void callTemplate(String name, String url) {
+        Template template = scenario.findTemplate(name);
+        if (template == null) {
+            throw new RuntimeException("Unable to find template: " + name);
+        }
+
+        WebContext web = new WebContext();
+        web.goTo(url);
+        handleSteps(template.getSteps(), NO_PARENT, web.getBody());
+        web.close();
+    }
+
+    // -------------------------------------------------------------------------
+
+    /**
+     * 
+     * @param steps
+     * @param parent
+     * @param context
+     */
     private void handleSteps(List<Step> steps, Individual parent, WebElement context) {
         if (logger.isTraceEnabled()) {
             logger.trace("handleSteps(" + steps + ", " + parent + ", " + context + ") - start");
@@ -84,6 +113,16 @@ public class WebDriverCrawler {
                 throw new RuntimeException("unknown command");
             }
         }
+    }
+
+    /**
+     * 
+     * @param step
+     * @param parent
+     * @param context
+     */
+    private void handleStep(CallTemplateStep step, Individual parent, WebElement context) {
+        callTemplate(step.getTemplateName(), step.getUrl());
     }
 
     /**
@@ -138,4 +177,5 @@ public class WebDriverCrawler {
             }
         }
     }
+
 }

@@ -14,7 +14,8 @@ import java.util.Map;
 public enum Command {
 
     ONTO_ELEM("onto-elem"),
-    VALUE_OF("value-of");
+    VALUE_OF("value-of"),
+    CALL_TEMPLATE("call-template");
 
     private final static Map<String, Command> BY_NAME;
     static {
