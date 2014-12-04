@@ -1,44 +1,84 @@
 {
   type: "scenario", 
   name: "manual", 
-  url: "http://www.inventati.org/kub1x/t/", 
   ontology: {
     base: "http://kub1x.org/onto/dip/t/", 
-  }, 
-  creationDate: "2014-11-26 9:40", 
-  steps: [
-    {
-      command: "onto-elem", 
-      typeof: "foaf:Person", 
-      selector: {
-        value: "tr", 
-        type: "jsoup", 
+    imports : [
+      {
+        prefix: "foaf", 
+        uri: "http://xmlns.com/foaf/0.1/", 
       }, 
+      {
+        prefix: "kbx", 
+        uri: "http://kub1x.org/onto/dip/t/", 
+      }, 
+    ], 
+  }, 
+  creation-date: "2014-11-30 12:40", 
+  call-template: {
+    command: "call-template", 
+    name: "init", 
+    url: "http://www.inventati.org/kub1x/t/", 
+  }, 
+  templates: [
+    {
+      name: "init", 
+      steps: [
+        {
+          command: "onto-elem", 
+          typeof: "http://xmlns.com/foaf/0.1/Person", 
+          selector: {
+            value: "tr", 
+            type: "css", 
+          }, 
+          steps: [
+            {
+              command: "value-of", 
+              property: "http://xmlns.com/foaf/0.1/firstName", 
+              selector: {
+                value: "td:nth-child(1)", 
+                type: "css", 
+              }, 
+            }, 
+            {
+              command: "value-of", 
+              property: "http://xmlns.com/foaf/0.1/lastName", 
+              selector: {
+                value: "td:nth-child(2)", 
+                type:  "css", 
+              }, 
+            }, 
+            {
+              command: "value-of", 
+              property: "http://xmlns.com/foaf/0.1/phone", 
+              selector: {
+                value: "td:nth-child(3)", 
+                type:  "css", 
+              }, 
+            },
+            {
+              command: "call-template", 
+              name: "detail", 
+              selector: {
+                value: "//td[contains(concat(' ', normalize-space(@class), ' '), ' detail ')]/a/@href", 
+                type:  "xpath", 
+              }, 
+            }, 
+          ], 
+        }, 
+      ], 
+    }, 
+    {
+      name: "detail", 
       steps: [
         {
           command: "value-of", 
-          property: "foaf:firstName", 
+          property: "http://xmlns.com/foaf/0.1/nickname", 
           selector: {
-            value: "td:nth-child(1)", 
-            type: "css", 
-          }, 
-        }, 
-        {
-          command: "value-of", 
-          property: "foaf:lastName", 
-          selector: {
-            value: "td:nth-child(2)", 
+            value: ".nick", 
             type:  "css", 
           }, 
-        }, 
-        {
-          command: "value-of", 
-          property: "foaf:phone", 
-          selector: {
-            value: "td:nth-child(3)", 
-            type:  "css", 
-          }, 
-        }, 
+        },
       ], 
     }, 
   ], 
