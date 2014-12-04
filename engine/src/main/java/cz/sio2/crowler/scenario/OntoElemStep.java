@@ -14,7 +14,7 @@ public class OntoElemStep extends Step implements WithSubsteps {
 
     // TODO change type to URI
     private String typeof;
-    private String selector;
+    private Selector selector;
     private String rel;
     private List<Step> substeps;
 
@@ -35,11 +35,11 @@ public class OntoElemStep extends Step implements WithSubsteps {
         this.typeof = typeof;
     }
 
-    public String getSelector() {
+    public Selector getSelector() {
         return selector;
     }
 
-    public void setSelector(String selector) {
+    public void setSelector(Selector selector) {
         this.selector = selector;
     }
 

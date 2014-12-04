@@ -11,7 +11,7 @@ public class ValueOfStep extends Step {
 
     // TODO change type to URI
     private String property;
-    private String selector;
+    private Selector selector;
 
     // ---------------------------------------------------------------
 
@@ -29,11 +29,11 @@ public class ValueOfStep extends Step {
         this.property = property;
     }
 
-    public String getSelector() {
+    public Selector getSelector() {
         return selector;
     }
 
-    public void setSelector(String selector) {
+    public void setSelector(Selector selector) {
         this.selector = selector;
     }
 

@@ -14,14 +14,15 @@ public class Vocabulary {
     public static final String foafMbox = "http://xmlns.com/foaf/0.1/mbox";
     public static final String foafMember = "http://xmlns.com/foaf/0.1/member";
 
-    public static final String RDFS="http://www.w3.org/2000/01/rdf-schema#";
-    public static final String RDFS_LABEL=RDFS+"label";
-    public static final String RDFS_COMMENT=RDFS+"comment";
+    public static final String RDFS = "http://www.w3.org/2000/01/rdf-schema#";
+    public static final String RDFS_LABEL = RDFS + "label";
+    public static final String RDFS_COMMENT = RDFS + "comment";
 
-    public static final String DC="http://purl.org/dc/elements/1.1/";
-    public static final String DC_TITLE=DC+"title";
-    public static final String DC_SOURCE=DC+"source";
-    public static final String DC_DESCRIPTION=DC+"description";
+    public static final String DC = "http://purl.org/dc/elements/1.1/";
+    public static final String DC_TITLE = DC + "title";
+    public static final String DC_SOURCE = DC + "source";
+    public static final String DC_DESCRIPTION = DC + "description";
 
-    public static final String XSD_INTEGER="http://www.w3.org/2001/XMLSchema#integer";
+    public static final String XSD_INTEGER = "http://www.w3.org/2001/XMLSchema#integer";
+    public static final String XSD_STRING = "http://www.w3.org/2001/XMLSchema#string";
 }

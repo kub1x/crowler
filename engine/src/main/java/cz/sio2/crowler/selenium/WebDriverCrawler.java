@@ -3,7 +3,6 @@ package cz.sio2.crowler.selenium;
 import java.util.List;
 import java.util.Map;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +19,7 @@ import cz.sio2.crowler.scenario.CallTemplateStep;
 import cz.sio2.crowler.scenario.OntoElemStep;
 import cz.sio2.crowler.scenario.OntologyConfig;
 import cz.sio2.crowler.scenario.Scenario;
+import cz.sio2.crowler.scenario.Selector;
 import cz.sio2.crowler.scenario.Step;
 import cz.sio2.crowler.scenario.Template;
 import cz.sio2.crowler.scenario.ValueOfStep;
@@ -73,6 +73,10 @@ public class WebDriverCrawler {
     }
 
     private void callTemplate(String name, String url) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("callTemplate(" + name + ", " + url + ") - start");
+        }
+
         Template template = scenario.findTemplate(name);
         if (template == null) {
             throw new RuntimeException("Unable to find template: " + name);
@@ -109,6 +113,9 @@ public class WebDriverCrawler {
             case VALUE_OF:
                 handleStep((ValueOfStep) step, parent, context);
                 break;
+            case CALL_TEMPLATE:
+                handleStep((CallTemplateStep) step, parent, context);
+                break;
             default:
                 throw new RuntimeException("unknown command");
             }
@@ -122,7 +129,23 @@ public class WebDriverCrawler {
      * @param context
      */
     private void handleStep(CallTemplateStep step, Individual parent, WebElement context) {
-        callTemplate(step.getTemplateName(), step.getUrl());
+        if (logger.isTraceEnabled()) {
+            logger.trace("handleStep(" + step + ", " + parent + ", " + context + ") - start");
+        }
+        Selector selector = step.getSelector();
+        String url = "";
+
+        if (selector != null) {
+            // WebElement elem = context.findElement(selector.getBy());
+            url = selector.getText(context);
+        }
+
+        // TODO what are the actual conditions for invalid URL here? Test URL validity.
+        if (url == null || url == "") {
+            url = step.getUrl();
+        }
+
+        callTemplate(step.getTemplateName(), url);
     }
 
     /**
@@ -133,7 +156,7 @@ public class WebDriverCrawler {
      */
     private void handleStep(OntoElemStep step, Individual parent, WebElement context) {
         if (logger.isTraceEnabled()) {
-            logger.trace("handleStep((OntoElemStep)" + step + ", " + parent + ", " + context + ") - start");
+            logger.trace("handleStep(" + step + ", " + parent + ", " + context + ") - start");
         }
 
         String typeof = step.getTypeof();
@@ -141,8 +164,8 @@ public class WebDriverCrawler {
 
         OntClass clazz = this.ontology.getOntClass(typeof);
 
-        String selector = step.getSelector();
-        List<WebElement> elements = context.findElements(By.cssSelector(selector));
+        Selector selector = step.getSelector();
+        List<WebElement> elements = selector.findElements(context);// context.findElements(By.cssSelector(selector));
         for (WebElement element : elements) {
 
             // TODO handle the id generation process
@@ -163,17 +186,19 @@ public class WebDriverCrawler {
 
     private void handleStep(ValueOfStep step, Individual parent, WebElement context) {
         if (logger.isTraceEnabled()) {
-            logger.trace("handleStep((ValueOfStep)" + step + ", " + parent + ", " + context + ") - start");
+            logger.trace("handleStep(" + step + ", " + parent + ", " + context + ") - start");
         }
 
         String property = step.getProperty();
-        String selector = step.getSelector();
-        List<WebElement> elements = context.findElements(By.cssSelector(selector));
+        Selector selector = step.getSelector();
+        List<WebElement> elements = selector.findElements(context);
         for (WebElement element : elements) {
             if (parent != null && property != null && property != "") {
-                OntProperty ontProperty = this.ontology.getOntProperty(property, PropertyType.OBJECT);
+                OntProperty ontProperty = this.ontology.getOntProperty(property, PropertyType.DATA);
                 String text = element.getText();
-                parent.addProperty(ontProperty, this.ontology.createLiteral(Vocabulary.RDFS_LABEL, text));
+                // TODO Figure out the datatype (currently defaults to XSD_STRING) of this literal.
+                // It shall fit the specification of the property in our included schemas.
+                parent.addProperty(ontProperty, this.ontology.createLiteral(Vocabulary.XSD_STRING, text));
             }
         }
     }

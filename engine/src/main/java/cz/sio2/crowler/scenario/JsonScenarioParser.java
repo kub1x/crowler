@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,8 +50,9 @@ public class JsonScenarioParser {
 
     // selector
     private static final String VALUE_KEY = "value";
-
-    // private static final String TYPE_KEY = "key";
+    private static final String TYPE_KEY = "type";
+    private static final String CSS_SELECTOR_TYPE = "css";
+    private static final String XPATH_SELECTOR_TYPE = "xpath";
 
     /**
      * Private constructor.
@@ -188,10 +190,19 @@ public class JsonScenarioParser {
 
     // -------------------------------------------------------------------------
 
-    private static String getSelector(JSONObject jsonStep) {
+    private static Selector getSelector(JSONObject jsonStep) {
         JSONObject jsonSelector = jsonStep.getJSONObject(SELECTOR_KEY);
-        // TODO we ignore the "type" here as it's always CSS now
-        return getStringPropertyOrEmpty(jsonSelector, VALUE_KEY);
+        String value = getStringPropertyOrEmpty(jsonSelector, VALUE_KEY);
+        String type = getStringPropertyOrEmpty(jsonSelector, TYPE_KEY);
+        switch (type) {
+        case CSS_SELECTOR_TYPE:
+            return new CssSelector(value);
+        case XPATH_SELECTOR_TYPE:
+            return new XPathSelector(value);
+        default:
+            throw new NotImplementedException("Unknown selector type: " + type);
+        }
+
     }
 
     // -------------------------------------------------------------------------
