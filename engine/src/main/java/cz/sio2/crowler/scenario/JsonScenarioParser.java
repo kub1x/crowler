@@ -12,12 +12,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author kub1x
  *
  */
 public class JsonScenarioParser {
+    private static Logger logger = LoggerFactory.getLogger(JsonScenarioParser.class.getName());
 
     // scenario
     private static final String NAME_KEY = "name";
@@ -69,6 +72,9 @@ public class JsonScenarioParser {
      * @throws JSONException
      */
     public static Scenario parse(String filePath) throws FileNotFoundException, JSONException {
+        if (logger.isTraceEnabled()) {
+            logger.trace("parse(" + filePath + ") - start");
+        }
         return parse(new FileReader(filePath));
     }
 
@@ -80,6 +86,9 @@ public class JsonScenarioParser {
      * @throws JSONException
      */
     public static Scenario parse(Reader reader) throws JSONException {
+        if (logger.isTraceEnabled()) {
+            logger.trace("parse(" + reader + ") - start");
+        }
         JSONObject json = new JSONObject(new JSONTokener(reader));
         Scenario result = new Scenario();
         populate(result, json);
@@ -89,6 +98,9 @@ public class JsonScenarioParser {
     // -------------------------------------------------------------------------
 
     private static void populate(Scenario scenario, JSONObject jsonScenario) throws JSONException {
+        if (logger.isTraceEnabled()) {
+            logger.trace("populate(" + scenario + ", " + jsonScenario + ") - start");
+        }
         scenario.setName(getStringPropertyOrEmpty(jsonScenario, NAME_KEY));
         scenario.setInitCallTemplate((CallTemplateStep) parseStep(jsonScenario.getJSONObject(CALL_TEMPLATE_KEY)));
         scenario.setOntologyConfig(parseOntologyConfig(jsonScenario));
@@ -98,6 +110,9 @@ public class JsonScenarioParser {
     // -------------------------------------------------------------------------
 
     private static OntologyConfig parseOntologyConfig(JSONObject jsonScenario) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("parseOntologyConfig(" + jsonScenario + ") - start");
+        }
         JSONObject jsonOntologyConfig = jsonScenario.getJSONObject(ONTOLOGY_KEY);
         OntologyConfig ontologyConfig = new OntologyConfig();
         ontologyConfig.setBase(getStringPropertyOrEmpty(jsonOntologyConfig, BASE_KEY));
@@ -106,6 +121,9 @@ public class JsonScenarioParser {
     }
 
     private static void populateImports(OntologyConfig ontologyConfig, JSONObject jsonOntologyConfig) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("populateImports(" + ontologyConfig + ", " + jsonOntologyConfig + ") - start");
+        }
         JSONArray imports = jsonOntologyConfig.getJSONArray(IMPORTS_KEY);
         for (int i = 0; i < imports.length(); i++) {
             JSONObject jsonImport = imports.getJSONObject(i);
@@ -116,6 +134,9 @@ public class JsonScenarioParser {
     // -------------------------------------------------------------------------
 
     private static void populateTemplates(Scenario scenario, JSONObject jsonScenario) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("populateTemplates(" + scenario + ", " + jsonScenario + ") - start");
+        }
         JSONArray templates = jsonScenario.getJSONArray(TEMPLATES_KEY);
         for (int i = 0; i < templates.length(); i++) {
             JSONObject jsonTemplate = templates.getJSONObject(i);
@@ -130,6 +151,9 @@ public class JsonScenarioParser {
     // -------------------------------------------------------------------------
 
     private static void populateSubSteps(WithSubsteps result, JSONObject json) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("populateSubSteps(" + result + ", " + json + ") - start");
+        }
         JSONArray steps = json.getJSONArray(STEPS_KEY);
 
         if (steps == null) {
@@ -144,6 +168,9 @@ public class JsonScenarioParser {
     }
 
     private static Step parseStep(JSONObject jsonStep) throws JSONException {
+        if (logger.isTraceEnabled()) {
+            logger.trace("populateStep(" + jsonStep + ") - start");
+        }
         Command command = Command.byName(jsonStep.getString(COMMAND_KEY));
         Step result;
         switch (command) {
@@ -169,6 +196,9 @@ public class JsonScenarioParser {
     // -------------------------------------------------------------------------
 
     private static Step populate(OntoElemStep ontoElemStep, JSONObject jsonStep) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("populate(" + ontoElemStep + ", " + jsonStep + ") - start");
+        }
         ontoElemStep.setTypeof(getStringPropertyOrEmpty(jsonStep, TYPEOF_KEY));
         ontoElemStep.setRel(getStringPropertyOrEmpty(jsonStep, REL_KEY));
         ontoElemStep.setSelector(getSelector(jsonStep));
@@ -177,12 +207,18 @@ public class JsonScenarioParser {
     }
 
     private static Step populate(ValueOfStep valueOfStep, JSONObject jsonStep) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("populate(" + valueOfStep + ", " + jsonStep + ") - start");
+        }
         valueOfStep.setProperty(getStringPropertyOrEmpty(jsonStep, PROPERTY_KEY));
         valueOfStep.setSelector(getSelector(jsonStep));
         return valueOfStep;
     }
 
     private static Step populate(CallTemplateStep callTemplateStep, JSONObject jsonStep) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("populate(" + callTemplateStep + ", " + jsonStep + ") - start");
+        }
         callTemplateStep.setTemplateName(getStringPropertyOrEmpty(jsonStep, NAME_KEY));
         callTemplateStep.setUrl(getStringPropertyOrEmpty(jsonStep, URL_KEY));
         return callTemplateStep;
@@ -191,6 +227,9 @@ public class JsonScenarioParser {
     // -------------------------------------------------------------------------
 
     private static Selector getSelector(JSONObject jsonStep) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("getSelector(" + jsonStep + ") - start");
+        }
         JSONObject jsonSelector = jsonStep.getJSONObject(SELECTOR_KEY);
         String value = getStringPropertyOrEmpty(jsonSelector, VALUE_KEY);
         String type = getStringPropertyOrEmpty(jsonSelector, TYPE_KEY);
@@ -215,6 +254,9 @@ public class JsonScenarioParser {
      * @return
      */
     private static String getStringPropertyOrEmpty(JSONObject obj, String key) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("getStringPropertyOrEmpty(" + obj + ", " + key + ") - start");
+        }
         try {
             if (obj != null && obj.has(key)) {
                 return obj.getString(key);

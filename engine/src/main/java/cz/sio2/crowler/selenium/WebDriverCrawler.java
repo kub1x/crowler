@@ -25,7 +25,7 @@ import cz.sio2.crowler.scenario.Template;
 import cz.sio2.crowler.scenario.ValueOfStep;
 
 public class WebDriverCrawler {
-    private Logger logger = LoggerFactory.getLogger(WebDriverCrawler.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(WebDriverCrawler.class.getName());
 
     private Scenario scenario;
 
