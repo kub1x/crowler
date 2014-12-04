@@ -82,6 +82,11 @@ public class WebDriverCrawler {
             throw new RuntimeException("Unable to find template: " + name);
         }
 
+        // No URL, no job...
+        if (url == null || url == "") {
+            return;
+        }
+
         WebContext web = new WebContext();
         web.goTo(url);
         handleSteps(template.getSteps(), NO_PARENT, web.getBody());
@@ -165,7 +170,7 @@ public class WebDriverCrawler {
         OntClass clazz = this.ontology.getOntClass(typeof);
 
         Selector selector = step.getSelector();
-        List<WebElement> elements = selector.findElements(context);// context.findElements(By.cssSelector(selector));
+        List<WebElement> elements = selector.findElements(context);
         for (WebElement element : elements) {
 
             // TODO handle the id generation process

@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
+import org.slf4j.LoggerFactory;
 
 import cz.sio2.crowler.connectors.FileJenaConnector;
 import cz.sio2.crowler.scenario.JsonScenarioParser;
@@ -42,6 +43,17 @@ public class Runner {
     // private boolean selenium = true;
 
     public static void main(String[] args) throws FileNotFoundException, JSONException {
+        // System.setProperty(, "TRACE");
+        System.out.println("log level = " + System.getProperty("org.slf4j.simpleLogger.defaultLogLevel"));
+
+        final org.slf4j.Logger log = LoggerFactory.getLogger(Runner.class);
+
+        log.trace("trace");
+        log.debug("debug");
+        log.info("info");
+        log.warn("warning");
+        log.error("error");
+
         new Runner().doMain(args);
     }
 

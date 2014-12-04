@@ -11,3 +11,4 @@ target/**
 /engine/.metadata
 /engine/.settings
 /*.log
+engine/phantomjsdriver.log
