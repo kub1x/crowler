@@ -201,7 +201,7 @@ public class JsonScenarioParser {
         }
         ontoElemStep.setTypeof(getStringPropertyOrEmpty(jsonStep, TYPEOF_KEY));
         ontoElemStep.setRel(getStringPropertyOrEmpty(jsonStep, REL_KEY));
-        ontoElemStep.setSelector(getSelector(jsonStep));
+        ontoElemStep.setSelector(getSelector(jsonStep, SELECTOR_KEY));
         populateSubSteps(ontoElemStep, jsonStep);
         return ontoElemStep;
     }
@@ -211,7 +211,7 @@ public class JsonScenarioParser {
             logger.trace("populate(" + valueOfStep + ", " + jsonStep + ") - start");
         }
         valueOfStep.setProperty(getStringPropertyOrEmpty(jsonStep, PROPERTY_KEY));
-        valueOfStep.setSelector(getSelector(jsonStep));
+        valueOfStep.setSelector(getSelector(jsonStep, SELECTOR_KEY));
         return valueOfStep;
     }
 
@@ -221,25 +221,31 @@ public class JsonScenarioParser {
         }
         callTemplateStep.setTemplateName(getStringPropertyOrEmpty(jsonStep, NAME_KEY));
         callTemplateStep.setUrl(getStringPropertyOrEmpty(jsonStep, URL_KEY));
+        callTemplateStep.setSelector(getSelector(jsonStep, SELECTOR_KEY));
         return callTemplateStep;
     }
 
     // -------------------------------------------------------------------------
 
-    private static Selector getSelector(JSONObject jsonStep) {
+    private static Selector getSelector(JSONObject jsonStep, String key) {
         if (logger.isTraceEnabled()) {
             logger.trace("getSelector(" + jsonStep + ") - start");
         }
-        JSONObject jsonSelector = jsonStep.getJSONObject(SELECTOR_KEY);
-        String value = getStringPropertyOrEmpty(jsonSelector, VALUE_KEY);
-        String type = getStringPropertyOrEmpty(jsonSelector, TYPE_KEY);
-        switch (type) {
-        case CSS_SELECTOR_TYPE:
-            return new CssSelector(value);
-        case XPATH_SELECTOR_TYPE:
-            return new XPathSelector(value);
-        default:
-            throw new NotImplementedException("Unknown selector type: " + type);
+        try {
+            JSONObject jsonSelector = jsonStep.getJSONObject(key);
+            String value = getStringPropertyOrEmpty(jsonSelector, VALUE_KEY);
+            String type = getStringPropertyOrEmpty(jsonSelector, TYPE_KEY);
+            switch (type) {
+            case CSS_SELECTOR_TYPE:
+                return new CssSelector(value);
+            case XPATH_SELECTOR_TYPE:
+                return new XPathSelector(value);
+            default:
+                throw new NotImplementedException("Unknown selector type: " + type);
+            }
+        } catch (JSONException e) {
+            // No selector
+            return null;
         }
 
     }

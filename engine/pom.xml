@@ -82,6 +82,7 @@
 			<artifactId>json</artifactId>
 			<version>20140107</version>
 		</dependency>
+		<!-- phantomjs -->
 		<dependency>
 			<groupId>com.github.detro</groupId>
 			<artifactId>phantomjsdriver</artifactId>

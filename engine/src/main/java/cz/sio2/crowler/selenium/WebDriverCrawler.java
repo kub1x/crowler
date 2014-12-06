@@ -3,6 +3,7 @@ package cz.sio2.crowler.selenium;
 import java.util.List;
 import java.util.Map;
 
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,7 @@ import cz.sio2.crowler.scenario.Step;
 import cz.sio2.crowler.scenario.Template;
 import cz.sio2.crowler.scenario.ValueOfStep;
 
-public class WebDriverCrawler {
+public class WebDriverCrawler implements AutoCloseable {
     private static Logger logger = LoggerFactory.getLogger(WebDriverCrawler.class.getName());
 
     private Scenario scenario;
@@ -44,11 +45,11 @@ public class WebDriverCrawler {
             logger.trace("doIt() - start");
         }
 
-        this.ontology.init(scenario.getName());
+        this.ontology.init(this.scenario.getName());
 
         // -----------------------------------
 
-        OntologyConfig ontologyConfig = scenario.getOntologyConfig();
+        OntologyConfig ontologyConfig = this.scenario.getOntologyConfig();
 
         if (ontologyConfig != null) {
             // TODO Potrebujeme seznam importu
@@ -56,28 +57,24 @@ public class WebDriverCrawler {
             Map<String, String> imports = ontologyConfig.getImports();
             for (final String prefix : imports.keySet()) {
                 String uri = imports.get(prefix);
-                ontology.addImport(uri);
-                ontology.setPrefix(prefix, uri);
+                this.ontology.addImport(uri);
+                this.ontology.setPrefix(prefix, uri);
                 System.out.println("adding prefix: " + prefix + ":" + uri);
             }
         }
 
         // -----------------------------------
 
-        handleStep(scenario.getInitCallTemplate(), NO_PARENT, NO_CONTEXT);
-
-        // -----------------------------------
-
-        this.ontology.close();
-
+        // TODO consider NOT using call-template here. Use URL and INIT-TEMPLATE-NAME instead and just call callTemplate() directly.
+        handleStep(this.scenario.getInitCallTemplate(), NO_PARENT, NO_CONTEXT);
     }
 
-    private void callTemplate(String name, String url) {
+    private void callTemplate(String name, String url, Individual parent) {
         if (logger.isTraceEnabled()) {
             logger.trace("callTemplate(" + name + ", " + url + ") - start");
         }
 
-        Template template = scenario.findTemplate(name);
+        Template template = this.scenario.findTemplate(name);
         if (template == null) {
             throw new RuntimeException("Unable to find template: " + name);
         }
@@ -87,10 +84,11 @@ public class WebDriverCrawler {
             return;
         }
 
-        WebContext web = new WebContext();
-        web.goTo(url);
-        handleSteps(template.getSteps(), NO_PARENT, web.getBody());
-        web.close();
+        // Self closeable call to web context
+        try (WebContext web = new WebContext()) {
+            web.goTo(url);
+            handleSteps(template.getSteps(), parent, web.getBody());
+        } // web.close();
     }
 
     // -------------------------------------------------------------------------
@@ -141,8 +139,12 @@ public class WebDriverCrawler {
         String url = "";
 
         if (selector != null) {
-            // WebElement elem = context.findElement(selector.getBy());
-            url = selector.getText(context);
+            try {
+                url = selector.getText(context);
+            } catch (NoSuchElementException e) {
+                // There is selector for next step, but nowhere to go...
+                return;
+            }
         }
 
         // TODO what are the actual conditions for invalid URL here? Test URL validity.
@@ -150,7 +152,13 @@ public class WebDriverCrawler {
             url = step.getUrl();
         }
 
-        callTemplate(step.getTemplateName(), url);
+        // TODO handle this properly: neither selector, nor manually added URL
+        if (url == null || url == "") {
+            // nowhere to go...
+            return;
+        }
+
+        callTemplate(step.getTemplateName(), url, parent);
     }
 
     /**
@@ -206,6 +214,11 @@ public class WebDriverCrawler {
                 parent.addProperty(ontProperty, this.ontology.createLiteral(Vocabulary.XSD_STRING, text));
             }
         }
+    }
+
+    @Override
+    public void close() throws Exception {
+        this.ontology.close();
     }
 
 }

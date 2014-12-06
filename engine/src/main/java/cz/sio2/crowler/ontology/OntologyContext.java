@@ -26,7 +26,7 @@ import cz.sio2.crowler.model.PropertyType;
  * @author kub1x
  *
  */
-public class OntologyContext {
+public class OntologyContext implements AutoCloseable {
 
     private final JenaConnector connector;
     private final OntModel model;

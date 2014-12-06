@@ -16,7 +16,6 @@ import org.openqa.selenium.WebElement;
  */
 public class XPathSelector extends Selector {
     private final static Pattern ATTR_PAT = Pattern.compile("^.*@([^/]+)$");
-    private final static Pattern NODE_PAT = Pattern.compile("^(.*)/@[^/]+$");
 
     /**
      * Constructor.
@@ -56,13 +55,6 @@ public class XPathSelector extends Selector {
      */
     public String getElementSelector() {
         return this.getValue().replaceAll("/@[^/]+$", "");
-        // Matcher matcher = NODE_PAT.matcher(this.getValue());
-        // if (matcher.find()) {
-        // return matcher.group(1);
-        // } else {
-        // // TODO don't do this dude!!!
-        // return null;
-        // }
     }
 
     /**
@@ -80,7 +72,6 @@ public class XPathSelector extends Selector {
     @Override
     public By getBy() {
         return By.xpath(this.getElementSelector());
-        // return new By.ByXPath(this.getValue());
     }
 
     /**

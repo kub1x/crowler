@@ -60,7 +60,7 @@
               command: "call-template", 
               name: "detail", 
               selector: {
-                value: "//td[contains(concat(' ', normalize-space(@class), ' '), ' detail ')]/a/@href", 
+                value: "./td[contains(concat(' ', normalize-space(@class), ' '), ' detail ')]/a/@href", 
                 type:  "xpath", 
               }, 
             }, 

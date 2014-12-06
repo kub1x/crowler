@@ -1,9 +1,7 @@
 package cz.sio2.crowler;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
-import org.json.JSONException;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -42,7 +40,7 @@ public class Runner {
     // "flag if selenium crowling is to be used (currently default)")
     // private boolean selenium = true;
 
-    public static void main(String[] args) throws FileNotFoundException, JSONException {
+    public static void main(String[] args) throws Exception {
         // System.setProperty(, "TRACE");
         System.out.println("log level = " + System.getProperty("org.slf4j.simpleLogger.defaultLogLevel"));
 
@@ -57,7 +55,7 @@ public class Runner {
         new Runner().doMain(args);
     }
 
-    public void doMain(String[] args) throws FileNotFoundException, JSONException {
+    public void doMain(String[] args) throws Exception {
 
         System.out.println("Working Directory = " + System.getProperty("user.dir"));
 
@@ -114,8 +112,9 @@ public class Runner {
         System.out.println("DEBUG - running WebDriverCrawler");
 
         // Run crowler
-        WebDriverCrawler wdc = new WebDriverCrawler(connector, scenario);
-        wdc.doIt();
+        try (WebDriverCrawler wdc = new WebDriverCrawler(connector, scenario)) {
+            wdc.doIt();
+        }
 
         // try {
         // final ConfigurationFactory conf_fact = (ConfigurationFactory) Class
