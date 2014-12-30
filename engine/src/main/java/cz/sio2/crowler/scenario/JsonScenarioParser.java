@@ -36,7 +36,7 @@ public class JsonScenarioParser {
     private static final String PREFIX_KEY = "prefix";
     private static final String URI_KEY = "uri";
 
-    // call -template
+    // call-template
     // NAME_KEY - from scenario
     private final static String URL_KEY = "url";
 
@@ -125,10 +125,19 @@ public class JsonScenarioParser {
         if (logger.isTraceEnabled()) {
             logger.trace("populateImports(" + ontologyConfig + ", " + jsonOntologyConfig + ") - start");
         }
-        JSONArray imports = jsonOntologyConfig.getJSONArray(IMPORTS_KEY);
-        for (int i = 0; i < imports.length(); i++) {
-            JSONObject jsonImport = imports.getJSONObject(i);
-            ontologyConfig.putImport(getStringPropertyOrEmpty(jsonImport, PREFIX_KEY), getStringPropertyOrEmpty(jsonImport, URI_KEY));
+        try {
+            JSONArray imports = jsonOntologyConfig.getJSONArray(IMPORTS_KEY);
+            for (int i = 0; i < imports.length(); i++) {
+                JSONObject jsonImport = imports.getJSONObject(i);
+                String prefix = getStringPropertyOrEmpty(jsonImport, PREFIX_KEY);
+                String uri = getStringPropertyOrEmpty(jsonImport, URI_KEY);
+                if (!prefix.isEmpty() && !uri.isEmpty()) {
+                    ontologyConfig.putImport(prefix, uri);
+                }
+            }
+        } catch (JSONException e) {
+            // No imports, no cry
+            return;
         }
     }
 
@@ -155,17 +164,18 @@ public class JsonScenarioParser {
         if (logger.isTraceEnabled()) {
             logger.trace("populateSubSteps(" + result + ", " + json + ") - start");
         }
-        JSONArray steps = json.getJSONArray(STEPS_KEY);
-
-        if (steps == null) {
+        try {
+            JSONArray steps = json.getJSONArray(STEPS_KEY);
+            for (int i = 0; i < steps.length(); i++) {
+                JSONObject jsonStep = (JSONObject) steps.get(i);
+                Step step = parseStep(jsonStep);
+                result.addStep(step);
+            }
+        } catch (JSONException e) {
+            // No sub-steps
             return;
         }
 
-        for (int i = 0; i < steps.length(); i++) {
-            JSONObject jsonStep = (JSONObject) steps.get(i);
-            Step step = parseStep(jsonStep);
-            result.addStep(step);
-        }
     }
 
     private static Step parseStep(JSONObject jsonStep) throws JSONException {
@@ -266,8 +276,7 @@ public class JsonScenarioParser {
 
             }
         } catch (JSONException e) {
-            // No selector
-            return null;
+            throw new ScenarioParserException("Wrong selector object: " + jsonSelector, e);
         }
 
     }
