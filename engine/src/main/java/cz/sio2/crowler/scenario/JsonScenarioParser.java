@@ -56,6 +56,7 @@ public class JsonScenarioParser {
     private static final String TYPE_KEY = "type";
     private static final String CSS_SELECTOR_TYPE = "css";
     private static final String XPATH_SELECTOR_TYPE = "xpath";
+    private static final String CHAINED_SELECTOR_TYPE = "chained";
 
     /**
      * Private constructor.
@@ -229,19 +230,40 @@ public class JsonScenarioParser {
 
     private static Selector getSelector(JSONObject jsonStep, String key) {
         if (logger.isTraceEnabled()) {
-            logger.trace("getSelector(" + jsonStep + ") - start");
+            logger.trace("getSelector(" + jsonStep + ", " + key + ") - start");
         }
         try {
-            JSONObject jsonSelector = jsonStep.getJSONObject(key);
-            String value = getStringPropertyOrEmpty(jsonSelector, VALUE_KEY);
+            return getSelector(jsonStep.getJSONObject(key));
+        } catch (JSONException e) {
+            // No selector
+            return null;
+        }
+    }
+
+    private static Selector getSelector(JSONObject jsonSelector) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("getSelector(" + jsonSelector + ") - start");
+        }
+        try {
             String type = getStringPropertyOrEmpty(jsonSelector, TYPE_KEY);
             switch (type) {
             case CSS_SELECTOR_TYPE:
-                return new CssSelector(value);
+                return new CssSelector(getStringPropertyOrEmpty(jsonSelector, VALUE_KEY));
+
             case XPATH_SELECTOR_TYPE:
-                return new XPathSelector(value);
+                return new XPathSelector(getStringPropertyOrEmpty(jsonSelector, VALUE_KEY));
+
+            case CHAINED_SELECTOR_TYPE:
+                ChainedSelector selector = new ChainedSelector();
+                JSONArray jsonSelectors = jsonSelector.getJSONArray(VALUE_KEY);
+                for (int i = 0; i < jsonSelectors.length(); i++) {
+                    selector.addSelector(getSelector(jsonSelectors.getJSONObject(i)));
+                }
+                return selector;
+
             default:
                 throw new NotImplementedException("Unknown selector type: " + type);
+
             }
         } catch (JSONException e) {
             // No selector

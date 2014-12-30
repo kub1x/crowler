@@ -18,6 +18,12 @@ public abstract class Selector {
 
     /**
      * Constructor.
+     */
+    protected Selector() {
+    }
+
+    /**
+     * Constructor.
      * 
      * @param value
      */
