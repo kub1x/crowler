@@ -54,7 +54,8 @@ public class XPathSelector extends Selector {
      * @return
      */
     public String getElementSelector() {
-        return this.getValue().replaceAll("/@[^/]+$", "");
+        String selector = this.getValue().replaceAll("/?@[^/]+$", "").trim();
+        return (selector.isEmpty() ? null : selector);
     }
 
     /**
@@ -71,15 +72,17 @@ public class XPathSelector extends Selector {
      */
     @Override
     public By getBy() {
-        return By.xpath(this.getElementSelector());
+        String selector = this.getElementSelector();
+        return (selector == null ? null : By.xpath(selector));
     }
 
     /**
-     * 
+     * NOTE if there is no element selector (by is null) we might be on "attribute only" XPath selector, so we'd better just return the context back.
      */
     @Override
     public WebElement findElement(WebElement context) {
-        return context.findElement(this.getBy());
+        By by = this.getBy();
+        return (by == null ? context : context.findElement(by));
     }
 
     /**

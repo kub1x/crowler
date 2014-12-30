@@ -32,7 +32,7 @@ public class ChainedSelector extends Selector {
         }
     }
 
-    /*
+    /**
      * (non-Javadoc)
      * 
      * @see cz.sio2.crowler.scenario.Selector#getBy()
@@ -43,7 +43,7 @@ public class ChainedSelector extends Selector {
         return null;
     }
 
-    /*
+    /**
      * (non-Javadoc)
      * 
      * @see cz.sio2.crowler.scenario.Selector#findElement(org.openqa.selenium.WebElement)
@@ -57,7 +57,7 @@ public class ChainedSelector extends Selector {
         return result;
     }
 
-    /*
+    /**
      * (non-Javadoc)
      * 
      * @see cz.sio2.crowler.scenario.Selector#findElements(org.openqa.selenium.WebElement)
@@ -78,15 +78,21 @@ public class ChainedSelector extends Selector {
         return result;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Return text of the last selector in the chain.
      * 
      * @see cz.sio2.crowler.scenario.Selector#getText(org.openqa.selenium.WebElement)
      */
     @Override
     public String getText(WebElement context) {
-        // TODO Auto-generated method stub
-        return null;
+        final int LAST = this.selectors.size() - 1;
+        Selector s;
+        for (int i = 0; i < LAST; i++) {
+            s = this.selectors.get(i);
+            context = s.findElement(context);
+        }
+        s = this.selectors.get(LAST);
+        return s.getText(context);
     }
 
     /**

@@ -63,7 +63,7 @@
                 value: [
                   {
                     value: "td.detail a", 
-                    type:  "xpath", 
+                    type:  "css", 
                   }, 
                   {
                     value: "@href", 
