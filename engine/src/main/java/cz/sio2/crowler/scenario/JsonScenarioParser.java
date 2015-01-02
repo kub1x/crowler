@@ -45,6 +45,7 @@ public class JsonScenarioParser {
     private final static String STEPS_KEY = "steps";
 
     // step
+    private static final String VALUEOF_KEY = "valueof";
     private static final String COMMAND_KEY = "command";
     private static final String TYPEOF_KEY = "typeof";
     private static final String REL_KEY = "rel";
@@ -57,6 +58,10 @@ public class JsonScenarioParser {
     private static final String CSS_SELECTOR_TYPE = "css";
     private static final String XPATH_SELECTOR_TYPE = "xpath";
     private static final String CHAINED_SELECTOR_TYPE = "chained";
+    private static final String TEXT_KEY = "text";
+
+    // private static final String REGEXP_KEY = "regexp";
+    // private static final String REPLACE_KEY = "replace";
 
     /**
      * Private constructor.
@@ -197,6 +202,14 @@ public class JsonScenarioParser {
             result = populate(new CallTemplateStep(), jsonStep);
             break;
 
+        case NARROW:
+            result = populate(new NarrowStep(), jsonStep);
+            break;
+
+        case USER_EVENT:
+            result = populate(new UserEventStep(), jsonStep);
+            break;
+
         default:
             throw new RuntimeException("Unnown or unimplemented command: " + command);
         }
@@ -223,6 +236,10 @@ public class JsonScenarioParser {
         }
         valueOfStep.setProperty(getStringPropertyOrEmpty(jsonStep, PROPERTY_KEY));
         valueOfStep.setSelector(getSelector(jsonStep, SELECTOR_KEY));
+        valueOfStep.setText(getStringPropertyOrNull(jsonStep, TEXT_KEY));
+        valueOfStep.setValue(getStringPropertyOrNull(jsonStep, VALUE_KEY));
+        // valueOfStep.setRegexp(getStringPropertyOrNull(jsonStep, REGEXP_KEY));
+        // valueOfStep.setReplace(getStringPropertyOrNull(jsonStep, REPLACE_KEY));
         return valueOfStep;
     }
 
@@ -233,7 +250,27 @@ public class JsonScenarioParser {
         callTemplateStep.setTemplateName(getStringPropertyOrEmpty(jsonStep, NAME_KEY));
         callTemplateStep.setUrl(getStringPropertyOrEmpty(jsonStep, URL_KEY));
         callTemplateStep.setSelector(getSelector(jsonStep, SELECTOR_KEY));
+
+        // Parse inner valueof
+        try {
+            ValueOfStep valueOfStep = new ValueOfStep();
+            populate(valueOfStep, jsonStep.getJSONObject(VALUEOF_KEY));
+            callTemplateStep.setValueOfStep(valueOfStep);
+        } catch (JSONException e) {
+            // Not mandatory - Do nothing...
+        }
+
         return callTemplateStep;
+    }
+
+    private static Step populate(NarrowStep narrowStep, JSONObject jsonStep) {
+        narrowStep.setSelector(getSelector(jsonStep, SELECTOR_KEY));
+        return narrowStep;
+    }
+
+    private static Step populate(UserEventStep userEventStep, JSONObject jsonStep) {
+        userEventStep.setValue(getStringPropertyOrEmpty(jsonStep, VALUE_KEY));
+        return userEventStep;
     }
 
     // -------------------------------------------------------------------------
@@ -304,5 +341,22 @@ public class JsonScenarioParser {
         } catch (JSONException e) {
             return "";
         }
+    }
+
+    private static String getStringPropertyOrNull(JSONObject obj, String key) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("getStringPropertyOrNull(" + obj + ", " + key + ") - start");
+        }
+        try {
+            if (obj != null && obj.has(key)) {
+                return obj.getString(key);
+            } else {
+                return null;
+            }
+
+        } catch (JSONException e) {
+            return null;
+        }
+
     }
 }

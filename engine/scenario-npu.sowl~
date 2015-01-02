@@ -1,0 +1,71 @@
+{
+  "type": "scenario",
+  "name": "npu",
+  "ontology": {
+    "base": "http://onto.mondis.cz/resource/npu/"
+  },
+  "creation-date": "2014-12-30 17:02",
+  "call-template": {
+    "command": "call-template",
+    "name": "init",
+    "url": "http://monumnet.npu.cz/pamfond/list.php?hledani=1&KrOk=&HiZe=&VybUzemi=1&sNazSidOb=&Adresa=&Cdom=&Pamatka=&CiRejst=&Uz=B&PrirUbytOd=3.5.1958&PrirUbytDo=30.12.2014"
+  },
+  "templates": [
+    {
+      "name": "init",
+      "steps": [
+        {
+          "commmand": "onto-elem",
+          "typeof": "http://onto.mondis.cz/resource/npu/MonumentRecord",
+          "selector": {
+            "value": "tbody tr.list",
+            "type": "css"
+          },
+          "steps": [
+            {
+              "commmand": "value-of",
+              "selector": {
+                "value": "td:nth-child(0)",
+                "type": "css"
+              },
+              "property": "http://onto.mondis.cz/resource/npu/hasCHObjectNumber",
+            },
+            {
+              "rel": "http://onto.mondis.cz/resource/npu/hasDistrict",
+              "commmand": "onto-elem",
+              "typeof": "http://onto.mondis.cz/resource/npu/District",
+              "selector": "td:eq(2)",
+              "steps": [
+                {
+                  "command": "value-of",
+                  "property": "http://www.w3.org/2000/01/rdf-schema#label",
+                  "selector": {
+                    "value": ".",
+                    "type": "css"
+                  },
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "commmand": "call-template",
+          "name": "init",
+          "selector": {
+            "value": [
+              {
+                "value" "td table a.inds:nth-child(0)",
+                "type": "css"
+              },
+              {
+                "value": "@href",
+                "type": "xpath"
+              }
+            ],
+            "type": "chained"
+          },
+        }
+      ]
+    }
+  ]
+}

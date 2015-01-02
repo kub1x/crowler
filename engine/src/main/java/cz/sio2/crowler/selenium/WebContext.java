@@ -19,15 +19,26 @@ public class WebContext implements AutoCloseable {
     private final WebDriver wd;
 
     public WebContext() {
+
+        // Firefox
         // this.wd = new FirefoxDriver();
+
+        // Phantom
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setJavascriptEnabled(true); // not really needed: JS enabled by default
-        caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, "C:/Program Files/phantomjs-1.9.8/phantomjs.exe");
+        caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, System.getProperty("phantom.path"));
         this.wd = new PhantomJSDriver(caps);
+
+        // HtmlUint
+        // this.wd = new HtmlUnitDriver(BrowserVersion.FIREFOX_);
     }
 
     public void goTo(String url) {
         this.wd.navigate().to(url);
+    }
+
+    public void back() {
+        this.wd.navigate().back();
     }
 
     public void close() {

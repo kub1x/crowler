@@ -1,0 +1,95 @@
+{
+  "type": "scenario",
+  "name": "npu",
+  "ontology": {
+    "base": "http://onto.mondis.cz/resource/npu/"
+  },
+  "creation-date": "2014-12-30 17:02",
+  "call-template": {
+    "command": "call-template",
+    "name": "init",
+    "url": "http://monumnet.npu.cz/pamfond/list.php?hledani=1&KrOk=&HiZe=&VybUzemi=1&sNazSidOb=&Adresa=&Cdom=&Pamatka=&CiRejst=&Uz=B&PrirUbytOd=3.5.1958&PrirUbytDo=30.12.2014"
+  },
+  "templates": [
+    {
+      "name": "init",
+      "steps": [
+        {
+          "command": "onto-elem",
+          "typeof": "http://onto.mondis.cz/resource/npu/MonumentRecord",
+          "selector": {
+            "value": "tbody tr.list:nth-child(1)",
+            "type": "css"
+          },
+          "steps": [
+            {
+              "command": "value-of",
+              "selector": {
+                "value": "td:nth-child(1)",
+                "type": "css"
+              },
+              "property": "http://onto.mondis.cz/resource/npu/hasCHObjectNumber",
+            },
+            {
+              "rel": "http://onto.mondis.cz/resource/npu/hasDistrict",
+              "command": "onto-elem",
+              "typeof": "http://onto.mondis.cz/resource/npu/District",
+              "selector": {
+                value: "td:nth-child(3)",
+                type: "css", 
+              }, 
+              "steps": [
+                {
+                  "command": "value-of",
+                  "property": "http://www.w3.org/2000/01/rdf-schema#label",
+                  "selector": {
+                    "value": ".",
+                    "type": "xpath"
+                  },
+                }
+              ]
+            }, 
+            //{
+            //  "command": "user-event", 
+            //  "value": "click", 
+            //},
+            {
+              command: "call-template", 
+              valueof: {
+                command: "value-of", 
+                selector: {
+                  value: ".", 
+                  type: "xpath", 
+                }
+                exec: "", 
+              }
+            }, 
+            {
+              command: "onto-elem", 
+              rel: "http://onto.mondis.cz/resource/npu/hasBuildingOffice",
+              typeof: "http://onto.mondis.cz/resource/npu/BuildingOffice",
+              selector: {
+                value: "div table tbody tr td table tbody tr:nth-child(13) td", 
+                type: "css", 
+              }, 
+              steps: [
+                {
+                  command: 'value-of', 
+                  property: "http://www.w3.org/2000/01/rdf-schema#label",
+                  selector: {
+                    value: ".", 
+                    type: "xpath", 
+                  }, 
+                }, 
+              ], 
+            }, 
+            //{
+            //  "command": "user-event", 
+            //  "value": "back", 
+            //}, 
+          ]
+        },
+      ]
+    }
+  ]
+}

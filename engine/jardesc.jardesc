@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jardesc>
+    <jar path="engine/crowler.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/engine/jardesc.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="true" mainClassHandleIdentifier="=engine/src\/main\/java&lt;cz.sio2.crowler{Runner.java[Runner" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+        <sealing sealJar="true">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
+        <folder path="/engine/.settings"/>
+        <folder path="/engine/target/classes"/>
+        <javaElement handleIdentifier="=engine/src\/main\/resources"/>
+        <file path="/engine/.classpath"/>
+        <javaElement handleIdentifier="=engine/src\/main\/java"/>
+        <file path="/engine/.project"/>
+    </selectedElements>
+</jardesc>

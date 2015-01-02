@@ -9,6 +9,7 @@ public class CallTemplateStep extends Step {
     private String templateName;
     private String url;
     private Selector selector;
+    private ValueOfStep valueOfStep;
 
     // -------------------------------------------------------------------------
 
@@ -64,6 +65,21 @@ public class CallTemplateStep extends Step {
      */
     public void setSelector(Selector selector) {
         this.selector = selector;
+    }
+
+    /**
+     * @return the valueOfStep
+     */
+    public ValueOfStep getValueOfStep() {
+        return valueOfStep;
+    }
+
+    /**
+     * @param valueOfStep
+     *            the valueOfStep to set
+     */
+    public void setValueOfStep(ValueOfStep valueOfStep) {
+        this.valueOfStep = valueOfStep;
     }
 
 }

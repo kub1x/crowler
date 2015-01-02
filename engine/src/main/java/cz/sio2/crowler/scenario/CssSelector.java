@@ -28,7 +28,7 @@ public class CssSelector extends Selector {
      */
     @Override
     public By getBy() {
-        return new By.ByCssSelector(this.getValue());
+        return By.cssSelector(this.getValue());
     }
 
     /**

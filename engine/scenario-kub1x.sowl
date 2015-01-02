@@ -59,18 +59,21 @@
             {
               command: "call-template", 
               name: "detail", 
-              selector: {
-                value: [
-                  {
-                    value: "td.detail a", 
-                    type:  "css", 
-                  }, 
-                  {
-                    value: "@href", 
-                    type:  "xpath", 
-                  }, 
-                ], 
-                type: "chained", 
+              valueof: {
+                command: "value-of", 
+                selector: {
+                  value: [
+                    {
+                      value: "td.detail a", 
+                      type:  "css", 
+                    }, 
+                    {
+                      value: "@href", 
+                      type:  "xpath", 
+                    }, 
+                  ], 
+                  type: "chained", 
+                }, 
               }, 
             }, 
           ], 

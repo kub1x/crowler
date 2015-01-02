@@ -15,7 +15,9 @@ public enum Command {
 
     ONTO_ELEM("onto-elem"),
     VALUE_OF("value-of"),
-    CALL_TEMPLATE("call-template");
+    CALL_TEMPLATE("call-template"),
+    NARROW("narrow"),
+    USER_EVENT("user-event");
 
     private final static Map<String, Command> BY_NAME;
     static {

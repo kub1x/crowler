@@ -26,6 +26,9 @@ public class Runner {
     // private String confClass = null;
     // //e.g.: --confClass cz.sio2.crowler.configurations.json.JsonConfiguration
 
+    @Option(name = "--phantom", usage = "specify where Phantom is installed")
+    private String phantomPath = "C:/Program Files/phantomjs-1.9.8/phantomjs.exe";
+
     @Option(name = "--rdfDir", usage = "print output as RDF files into directory specified by this argument (currently default, required)")
     private String rdfDir = null;
 
@@ -57,8 +60,9 @@ public class Runner {
 
     public void doMain(String[] args) throws Exception {
 
-        System.out.println("Working Directory = " + System.getProperty("user.dir"));
+        System.setProperty("phantom.path", phantomPath);
 
+        // System.out.println("Working Directory = " + System.getProperty("user.dir"));
         // System.out.println("Jar directory = " + jarDir);
 
         // Parsing console arguments
