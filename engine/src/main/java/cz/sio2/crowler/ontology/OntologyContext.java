@@ -50,7 +50,7 @@ public class OntologyContext implements AutoCloseable {
 
     public Individual createEmptyIndividual(String id, OntClass clazz) {
         if (id == null) {
-            id = "indiv" + getCurrentTimeStamp();
+            id = "indiv-" + getCurrentTimeStamp();
         }
         return this.model.createIndividual(Utils.getUniqueIRI(model, baseOntoPrefix, id), clazz);
     }
