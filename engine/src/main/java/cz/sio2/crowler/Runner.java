@@ -5,9 +5,9 @@ import java.io.File;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
-import org.slf4j.LoggerFactory;
 
 import cz.sio2.crowler.connectors.FileJenaConnector;
+import cz.sio2.crowler.connectors.SesameJenaConnector;
 import cz.sio2.crowler.scenario.JsonScenarioParser;
 import cz.sio2.crowler.scenario.Scenario;
 import cz.sio2.crowler.selenium.WebDriverCrawler;
@@ -16,11 +16,11 @@ import cz.sio2.crowler.selenium.WebDriverCrawler;
 
 public class Runner {
 
-    // @Option(name="--sesameUrl")
-    // private String sesameUrl = null;
-    //
-    // @Option(name="--repositoryId")
-    // private String repositoryId = null;
+    @Option(name = "--sesameUrl")
+    private String sesameUrl = null;
+
+    @Option(name = "--repositoryId")
+    private String repositoryId = null;
 
     // @Option(name = "--confClass", usage="class of configuration to be used")
     // private String confClass = null;
@@ -32,29 +32,10 @@ public class Runner {
     @Option(name = "--rdfDir", usage = "print output as RDF files into directory specified by this argument (currently default, required)")
     private String rdfDir = null;
 
-    // @Option(name = "--jarDir",
-    // usage="pass directory of the crowler.jar jarball (currently required)")
-    // private String jarDir = null;
-
     @Option(name = "--scenario", usage = "path to xml scenario (currently required)")
     private String scenarioPath = null;
 
-    // @Option(name = "--selenium", usage =
-    // "flag if selenium crowling is to be used (currently default)")
-    // private boolean selenium = true;
-
     public static void main(String[] args) throws Exception {
-        // System.setProperty(, "TRACE");
-        System.out.println("log level = " + System.getProperty("org.slf4j.simpleLogger.defaultLogLevel"));
-
-        final org.slf4j.Logger log = LoggerFactory.getLogger(Runner.class);
-
-        log.trace("trace");
-        log.debug("debug");
-        log.info("info");
-        log.warn("warning");
-        log.error("error");
-
         new Runner().doMain(args);
     }
 
@@ -89,31 +70,27 @@ public class Runner {
         System.out.println("DEBUG scenarioPath: " + scenarioPath);
 
         JenaConnector connector = null;
-
-        if (rdfDir != null) {
-            // connector = new FileJenaConnector(new File(jarDir, file), false);
+        if (sesameUrl != null) {
+            XTrustProvider.install();
+            final SesameJenaConnector cx = new SesameJenaConnector();
+            cx.setServerUrl(sesameUrl);
+            cx.setRepositoryId(repositoryId);
+            // cx.setServerUrl("http://onto.mondis.cz/openrdf-sesame");//args[1]);
+            // cx.setServerUrl("http://onto.mondis.cz/openrdf-sesame");//args[1]);
+            // cx.setRepositoryId("mondis-webdata");//args[2]);//id+"-"+Calendar.getInstance());
+            // cx.setServerUrl("https://dev.sio2.cz/openrdf-sesame");//args[1]);
+            // cx.setRepositoryId("monumnet-webdata");//args[2]);//id+"-"+Calendar.getInstance());
+            connector = cx;
+        } else if (rdfDir != null) {
             connector = new FileJenaConnector(new File(rdfDir), false);
         }
-        // if (sesame != null) {
-        // XTrustProvider.install();
-        // final SesameJenaConnector cx = new SesameJenaConnector();
-        // cx.setServerUrl(sesameUrl);
-        // cx.setRepositoryId(repositoryId);
-        //
-        // //cx.setServerUrl("http://onto.mondis.cz/openrdf-sesame");//args[1]);
-        // //cx.setRepositoryId("mondis-webdata");//args[2]);//id+"-"+Calendar.getInstance());
-        // //cx.setServerUrl("https://dev.sio2.cz/openrdf-sesame");//args[1]);
-        // //cx.setRepositoryId("monumnet-webdata");//args[2]);//id+"-"+Calendar.getInstance());
-        // connector = cx;
-        // }
 
-        System.out.println("DEBUG - parsing");
+        System.out.println("-- starting --");
 
         // Parse scenario
-        // Scenario scenario = Scenario.parse(scenarioPath);
         Scenario scenario = JsonScenarioParser.parse(scenarioPath);
 
-        System.out.println("DEBUG - running WebDriverCrawler");
+        System.out.println("-- running WebDriverCrawler --");
 
         // Run crowler
         try (WebDriverCrawler wdc = new WebDriverCrawler(connector, scenario)) {
@@ -134,7 +111,7 @@ public class Runner {
         // e.printStackTrace();
         // }
 
-        System.out.println("DEBUG - finished");
+        System.out.println("-- finished --");
     }
 
 }

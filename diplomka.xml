@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project engine with Jar-in-Jar Loader">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="C:/Users/kub1x/Desktop/crowler/crowler.jar">
+            <manifest>
+                <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+                <attribute name="Rsrc-Main-Class" value="cz.sio2.crowler.Runner"/>
+                <attribute name="Class-Path" value="."/>
+                <attribute name="Rsrc-Class-Path" value="./ args4j-maven-plugin-2.0.28.jar args4j-tools-2.0.28-all.jar args4j-2.0.28.jar tools.jar maven-project-2.0.4.jar maven-settings-2.0.4.jar maven-profile-2.0.4.jar maven-model-2.0.4.jar maven-artifact-manager-2.0.4.jar maven-repository-metadata-2.0.4.jar wagon-provider-api-1.0-alpha-6.jar plexus-utils-1.1.jar maven-artifact-2.0.4.jar plexus-container-default-1.0-alpha-9.jar classworlds-1.1-alpha-2.jar maven-plugin-api-2.0.jar commons-logging-1.1.1.jar slf4j-api-1.7.5.jar slf4j-log4j12-1.7.5.jar log4j-1.2.17.jar jsoup-1.7.1.jar sesame-runtime-2.7.5.jar sesame-model-2.7.5.jar sesame-util-2.7.5.jar sesame-repository-api-2.7.5.jar sesame-query-2.7.5.jar sesame-repository-manager-2.7.5.jar sesame-repository-event-2.7.5.jar sesame-repository-http-2.7.5.jar sesame-repository-sparql-2.7.5.jar sesame-repository-contextaware-2.7.5.jar sesame-repository-sail-2.7.5.jar sesame-queryalgebra-model-2.7.5.jar sesame-sail-api-2.7.5.jar sesame-sail-federation-2.7.5.jar sesame-queryalgebra-evaluation-2.7.5.jar sesame-queryparser-api-2.7.5.jar sesame-queryparser-serql-2.7.5.jar sesame-queryparser-sparql-2.7.5.jar sesame-queryresultio-api-2.7.5.jar sesame-queryresultio-binary-2.7.5.jar sesame-queryresultio-sparqljson-2.7.5.jar jackson-core-2.2.1.jar sesame-queryresultio-sparqlxml-2.7.5.jar sesame-queryresultio-text-2.7.5.jar opencsv-2.0.jar sesame-repository-dataset-2.7.5.jar sesame-http-protocol-2.7.5.jar sesame-http-client-2.7.5.jar commons-httpclient-3.1.jar sesame-rio-api-2.7.5.jar sesame-rio-datatypes-2.7.5.jar sesame-rio-languages-2.7.5.jar sesame-rio-binary-2.7.5.jar sesame-rio-ntriples-2.7.5.jar sesame-rio-nquads-2.7.5.jar sesame-rio-n3-2.7.5.jar sesame-rio-rdfjson-2.7.5.jar sesame-rio-rdfxml-2.7.5.jar sesame-rio-trix-2.7.5.jar sesame-rio-turtle-2.7.5.jar sesame-rio-trig-2.7.5.jar sesame-sail-inferencer-2.7.5.jar sesame-sail-memory-2.7.5.jar sesame-sail-nativerdf-2.7.5.jar sesame-sail-rdbms-2.7.5.jar commons-dbcp-1.3.jar commons-pool-1.5.4.jar jena-sesame-0.2-SNAPSHOT.jar jena-sesame-common-0.2-SNAPSHOT.jar jena-core-2.7.3.jar jena-iri-0.9.3.jar jena-arq-2.9.3.jar jena-2.6.4.jar iri-0.8.jar icu4j-3.4.4.jar xercesImpl-2.7.1.jar selenium-java-2.44.0.jar selenium-chrome-driver-2.44.0.jar selenium-htmlunit-driver-2.44.0.jar selenium-firefox-driver-2.44.0.jar commons-exec-1.1.jar selenium-ie-driver-2.44.0.jar jna-3.4.0.jar platform-3.4.0.jar selenium-safari-driver-2.44.0.jar selenium-support-2.44.0.jar webbit-0.4.14.jar netty-3.5.2.Final.jar htmlunit-2.15.jar xalan-2.7.1.jar serializer-2.7.1.jar xml-apis-1.3.04.jar commons-collections-3.2.1.jar commons-lang3-3.3.2.jar httpclient-4.3.3.jar httpmime-4.3.3.jar commons-codec-1.9.jar htmlunit-core-js-2.15.jar nekohtml-1.9.21.jar cssparser-0.9.14.jar sac-1.3.jar commons-io-2.4.jar jetty-websocket-8.1.15.v20140411.jar jetty-util-8.1.15.v20140411.jar jetty-io-8.1.15.v20140411.jar jetty-http-8.1.15.v20140411.jar httpcore-4.4-alpha1.jar json-20140107.jar phantomjsdriver-1.2.0.jar selenium-remote-driver-2.41.0.jar cglib-nodep-2.1_3.jar selenium-api-2.41.0.jar guava-15.0.jar"/>
+            </manifest>
+            <zipfileset src="jar-in-jar-loader.zip"/>
+            <fileset dir="C:/Users/kub1x/school/fel/diplomka/crowler/engine/target/classes"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\kohsuke\args4j\args4j-maven-plugin\2.0.28" includes="args4j-maven-plugin-2.0.28.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\args4j\args4j-tools\2.0.28" includes="args4j-tools-2.0.28-all.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\args4j\args4j\2.0.28" includes="args4j-2.0.28.jar"/>
+            <zipfileset dir="C:\Program Files\Java\jdk1.8.0\lib" includes="tools.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\apache\maven\maven-project\2.0.4" includes="maven-project-2.0.4.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\apache\maven\maven-settings\2.0.4" includes="maven-settings-2.0.4.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\apache\maven\maven-profile\2.0.4" includes="maven-profile-2.0.4.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\apache\maven\maven-model\2.0.4" includes="maven-model-2.0.4.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\apache\maven\maven-artifact-manager\2.0.4" includes="maven-artifact-manager-2.0.4.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\apache\maven\maven-repository-metadata\2.0.4" includes="maven-repository-metadata-2.0.4.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\apache\maven\wagon\wagon-provider-api\1.0-alpha-6" includes="wagon-provider-api-1.0-alpha-6.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\codehaus\plexus\plexus-utils\1.1" includes="plexus-utils-1.1.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\apache\maven\maven-artifact\2.0.4" includes="maven-artifact-2.0.4.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\codehaus\plexus\plexus-container-default\1.0-alpha-9" includes="plexus-container-default-1.0-alpha-9.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\classworlds\classworlds\1.1-alpha-2" includes="classworlds-1.1-alpha-2.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\apache\maven\maven-plugin-api\2.0" includes="maven-plugin-api-2.0.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\commons-logging\commons-logging\1.1.1" includes="commons-logging-1.1.1.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\slf4j\slf4j-api\1.7.5" includes="slf4j-api-1.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\slf4j\slf4j-log4j12\1.7.5" includes="slf4j-log4j12-1.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\log4j\log4j\1.2.17" includes="log4j-1.2.17.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\jsoup\jsoup\1.7.1" includes="jsoup-1.7.1.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-runtime\2.7.5" includes="sesame-runtime-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-model\2.7.5" includes="sesame-model-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-util\2.7.5" includes="sesame-util-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-repository-api\2.7.5" includes="sesame-repository-api-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-query\2.7.5" includes="sesame-query-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-repository-manager\2.7.5" includes="sesame-repository-manager-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-repository-event\2.7.5" includes="sesame-repository-event-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-repository-http\2.7.5" includes="sesame-repository-http-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-repository-sparql\2.7.5" includes="sesame-repository-sparql-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-repository-contextaware\2.7.5" includes="sesame-repository-contextaware-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-repository-sail\2.7.5" includes="sesame-repository-sail-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-queryalgebra-model\2.7.5" includes="sesame-queryalgebra-model-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-sail-api\2.7.5" includes="sesame-sail-api-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-sail-federation\2.7.5" includes="sesame-sail-federation-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-queryalgebra-evaluation\2.7.5" includes="sesame-queryalgebra-evaluation-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-queryparser-api\2.7.5" includes="sesame-queryparser-api-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-queryparser-serql\2.7.5" includes="sesame-queryparser-serql-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-queryparser-sparql\2.7.5" includes="sesame-queryparser-sparql-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-queryresultio-api\2.7.5" includes="sesame-queryresultio-api-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-queryresultio-binary\2.7.5" includes="sesame-queryresultio-binary-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-queryresultio-sparqljson\2.7.5" includes="sesame-queryresultio-sparqljson-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.2.1" includes="jackson-core-2.2.1.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-queryresultio-sparqlxml\2.7.5" includes="sesame-queryresultio-sparqlxml-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-queryresultio-text\2.7.5" includes="sesame-queryresultio-text-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\net\sf\opencsv\opencsv\2.0" includes="opencsv-2.0.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-repository-dataset\2.7.5" includes="sesame-repository-dataset-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-http-protocol\2.7.5" includes="sesame-http-protocol-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-http-client\2.7.5" includes="sesame-http-client-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\commons-httpclient\commons-httpclient\3.1" includes="commons-httpclient-3.1.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-rio-api\2.7.5" includes="sesame-rio-api-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-rio-datatypes\2.7.5" includes="sesame-rio-datatypes-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-rio-languages\2.7.5" includes="sesame-rio-languages-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-rio-binary\2.7.5" includes="sesame-rio-binary-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-rio-ntriples\2.7.5" includes="sesame-rio-ntriples-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-rio-nquads\2.7.5" includes="sesame-rio-nquads-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-rio-n3\2.7.5" includes="sesame-rio-n3-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-rio-rdfjson\2.7.5" includes="sesame-rio-rdfjson-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-rio-rdfxml\2.7.5" includes="sesame-rio-rdfxml-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-rio-trix\2.7.5" includes="sesame-rio-trix-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-rio-turtle\2.7.5" includes="sesame-rio-turtle-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-rio-trig\2.7.5" includes="sesame-rio-trig-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-sail-inferencer\2.7.5" includes="sesame-sail-inferencer-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-sail-memory\2.7.5" includes="sesame-sail-memory-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-sail-nativerdf\2.7.5" includes="sesame-sail-nativerdf-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\openrdf\sesame\sesame-sail-rdbms\2.7.5" includes="sesame-sail-rdbms-2.7.5.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\commons-dbcp\commons-dbcp\1.3" includes="commons-dbcp-1.3.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\commons-pool\commons-pool\1.5.4" includes="commons-pool-1.5.4.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\com\github\ansell\jenasesame\jena-sesame\0.2-SNAPSHOT" includes="jena-sesame-0.2-SNAPSHOT.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\com\github\ansell\jenasesame\jena-sesame-common\0.2-SNAPSHOT" includes="jena-sesame-common-0.2-SNAPSHOT.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\apache\jena\jena-core\2.7.3" includes="jena-core-2.7.3.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\apache\jena\jena-iri\0.9.3" includes="jena-iri-0.9.3.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\apache\jena\jena-arq\2.9.3" includes="jena-arq-2.9.3.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\com\hp\hpl\jena\jena\2.6.4" includes="jena-2.6.4.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\com\hp\hpl\jena\iri\0.8" includes="iri-0.8.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\com\ibm\icu\icu4j\3.4.4" includes="icu4j-3.4.4.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\xerces\xercesImpl\2.7.1" includes="xercesImpl-2.7.1.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\seleniumhq\selenium\selenium-java\2.44.0" includes="selenium-java-2.44.0.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\seleniumhq\selenium\selenium-chrome-driver\2.44.0" includes="selenium-chrome-driver-2.44.0.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\seleniumhq\selenium\selenium-htmlunit-driver\2.44.0" includes="selenium-htmlunit-driver-2.44.0.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\seleniumhq\selenium\selenium-firefox-driver\2.44.0" includes="selenium-firefox-driver-2.44.0.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\apache\commons\commons-exec\1.1" includes="commons-exec-1.1.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\seleniumhq\selenium\selenium-ie-driver\2.44.0" includes="selenium-ie-driver-2.44.0.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\net\java\dev\jna\jna\3.4.0" includes="jna-3.4.0.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\net\java\dev\jna\platform\3.4.0" includes="platform-3.4.0.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\seleniumhq\selenium\selenium-safari-driver\2.44.0" includes="selenium-safari-driver-2.44.0.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\seleniumhq\selenium\selenium-support\2.44.0" includes="selenium-support-2.44.0.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\webbitserver\webbit\0.4.14" includes="webbit-0.4.14.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\io\netty\netty\3.5.2.Final" includes="netty-3.5.2.Final.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\net\sourceforge\htmlunit\htmlunit\2.15" includes="htmlunit-2.15.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\xalan\xalan\2.7.1" includes="xalan-2.7.1.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\xalan\serializer\2.7.1" includes="serializer-2.7.1.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\xml-apis\xml-apis\1.3.04" includes="xml-apis-1.3.04.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\commons-collections\commons-collections\3.2.1" includes="commons-collections-3.2.1.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\apache\commons\commons-lang3\3.3.2" includes="commons-lang3-3.3.2.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\apache\httpcomponents\httpclient\4.3.3" includes="httpclient-4.3.3.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\apache\httpcomponents\httpmime\4.3.3" includes="httpmime-4.3.3.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\commons-codec\commons-codec\1.9" includes="commons-codec-1.9.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\net\sourceforge\htmlunit\htmlunit-core-js\2.15" includes="htmlunit-core-js-2.15.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\net\sourceforge\nekohtml\nekohtml\1.9.21" includes="nekohtml-1.9.21.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\net\sourceforge\cssparser\cssparser\0.9.14" includes="cssparser-0.9.14.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\w3c\css\sac\1.3" includes="sac-1.3.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\commons-io\commons-io\2.4" includes="commons-io-2.4.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\eclipse\jetty\jetty-websocket\8.1.15.v20140411" includes="jetty-websocket-8.1.15.v20140411.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\eclipse\jetty\jetty-util\8.1.15.v20140411" includes="jetty-util-8.1.15.v20140411.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\eclipse\jetty\jetty-io\8.1.15.v20140411" includes="jetty-io-8.1.15.v20140411.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\eclipse\jetty\jetty-http\8.1.15.v20140411" includes="jetty-http-8.1.15.v20140411.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\apache\httpcomponents\httpcore\4.4-alpha1" includes="httpcore-4.4-alpha1.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\json\json\20140107" includes="json-20140107.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\com\github\detro\phantomjsdriver\1.2.0" includes="phantomjsdriver-1.2.0.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\seleniumhq\selenium\selenium-remote-driver\2.41.0" includes="selenium-remote-driver-2.41.0.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\cglib\cglib-nodep\2.1_3" includes="cglib-nodep-2.1_3.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\org\seleniumhq\selenium\selenium-api\2.41.0" includes="selenium-api-2.41.0.jar"/>
+            <zipfileset dir="C:\Users\kub1x\.m2\repository\com\google\guava\guava\15.0" includes="guava-15.0.jar"/>
+        </jar>
+    </target>
+</project>
