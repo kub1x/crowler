@@ -12,8 +12,6 @@ import cz.sio2.crowler.scenario.JsonScenarioParser;
 import cz.sio2.crowler.scenario.Scenario;
 import cz.sio2.crowler.selenium.WebDriverCrawler;
 
-//import cz.sio2.crowler.connectors.SesameJenaConnector;
-
 public class Runner {
 
     @Option(name = "--sesameUrl")
@@ -21,10 +19,6 @@ public class Runner {
 
     @Option(name = "--repositoryId")
     private String repositoryId = null;
-
-    // @Option(name = "--confClass", usage="class of configuration to be used")
-    // private String confClass = null;
-    // //e.g.: --confClass cz.sio2.crowler.configurations.json.JsonConfiguration
 
     @Option(name = "--phantom", usage = "specify where Phantom is installed")
     private String phantomPath = "C:/Program Files/phantomjs-1.9.8/phantomjs.exe";
@@ -42,9 +36,6 @@ public class Runner {
     public void doMain(String[] args) throws Exception {
 
         System.setProperty("phantom.path", phantomPath);
-
-        // System.out.println("Working Directory = " + System.getProperty("user.dir"));
-        // System.out.println("Jar directory = " + jarDir);
 
         // Parsing console arguments
         CmdLineParser parser = new CmdLineParser(this);
@@ -96,20 +87,6 @@ public class Runner {
         try (WebDriverCrawler wdc = new WebDriverCrawler(connector, scenario)) {
             wdc.doIt();
         }
-
-        // try {
-        // final ConfigurationFactory conf_fact = (ConfigurationFactory) Class
-        // .forName(confClass).newInstance();
-        //
-        // new FullCrawler(connector).run(conf_fact
-        // .getConfiguration(new HashMap(System.getProperties())));
-        // } catch (ClassNotFoundException cnfe) {
-        // cnfe.printStackTrace();
-        // } catch (InstantiationException e) {
-        // e.printStackTrace();
-        // } catch (IllegalAccessException e) {
-        // e.printStackTrace();
-        // }
 
         System.out.println("-- finished --");
     }

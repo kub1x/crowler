@@ -237,7 +237,7 @@ public class JsonScenarioParser {
         valueOfStep.setProperty(getStringPropertyOrEmpty(jsonStep, PROPERTY_KEY));
         valueOfStep.setSelector(getSelector(jsonStep, SELECTOR_KEY));
         valueOfStep.setText(getStringPropertyOrNull(jsonStep, TEXT_KEY));
-        valueOfStep.setValue(getStringPropertyOrNull(jsonStep, VALUE_KEY));
+        // valueOfStep.setValue(getStringPropertyOrNull(jsonStep, VALUE_KEY));
         // valueOfStep.setRegexp(getStringPropertyOrNull(jsonStep, REGEXP_KEY));
         // valueOfStep.setReplace(getStringPropertyOrNull(jsonStep, REPLACE_KEY));
         return valueOfStep;
@@ -251,10 +251,10 @@ public class JsonScenarioParser {
         callTemplateStep.setUrl(getStringPropertyOrEmpty(jsonStep, URL_KEY));
         callTemplateStep.setSelector(getSelector(jsonStep, SELECTOR_KEY));
 
-        // Parse inner valueof
+        // Parse inner value-of
         try {
             ValueOfStep valueOfStep = new ValueOfStep();
-            populate(valueOfStep, jsonStep.getJSONObject(VALUEOF_KEY));
+            populate(valueOfStep, jsonStep.getJSONObject(VALUE_KEY));
             callTemplateStep.setValueOfStep(valueOfStep);
         } catch (JSONException e) {
             // Not mandatory - Do nothing...
