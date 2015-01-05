@@ -13,7 +13,7 @@ import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.ontology.OntProperty;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
-import cz.sio2.crowler.model.PropertyType;
+import cz.sio2.crowler.ontology.PropertyType;
 
 public class Utils {
 
@@ -42,13 +42,6 @@ public class Utils {
             l = stripAccents(label.toLowerCase().trim().replaceAll("[\\s\\xA0]", "-").replaceAll("/", "_slash_"));
             l = java.net.URLEncoder.encode(l, "UTF-8");
             String newIri = iri + l;
-
-            // int i = 0;
-            // while (model.containsResource(ModelFactory.createOntologyModel().getResource(newIri))) {
-            // newIri = Vocabulary.MONDIS_IRI + l;
-            // }
-            // java.net.URLEncoder.encode(label, "UTF-8")
-
             return newIri;
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.

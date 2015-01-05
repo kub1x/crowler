@@ -14,8 +14,8 @@ import com.hp.hpl.jena.ontology.OntProperty;
 
 import cz.sio2.crowler.JenaConnector;
 import cz.sio2.crowler.Vocabulary;
-import cz.sio2.crowler.model.PropertyType;
 import cz.sio2.crowler.ontology.OntologyContext;
+import cz.sio2.crowler.ontology.PropertyType;
 import cz.sio2.crowler.scenario.CallTemplateStep;
 import cz.sio2.crowler.scenario.NarrowStep;
 import cz.sio2.crowler.scenario.OntoElemStep;
@@ -53,8 +53,6 @@ public class WebDriverCrawler implements AutoCloseable {
         OntologyConfig ontologyConfig = this.scenario.getOntologyConfig();
 
         if (ontologyConfig != null) {
-            // TODO Potrebujeme seznam importu
-            // e.x.: http://onto.mondis.cz/resource/npu/
             Map<String, String> imports = ontologyConfig.getImports();
             for (final String prefix : imports.keySet()) {
                 String uri = imports.get(prefix);
@@ -66,7 +64,6 @@ public class WebDriverCrawler implements AutoCloseable {
 
         // -----------------------------------
 
-        // TODO consider NOT using call-template here. Use URL and INIT-TEMPLATE-NAME instead and just call callTemplate() directly.
         handleStep(this.scenario.getInitCallTemplate(), NO_PARENT, NO_CONTEXT, null);
     }
 
@@ -168,12 +165,10 @@ public class WebDriverCrawler implements AutoCloseable {
             }
         }
 
-        // TODO what are the actual conditions for invalid URL here? Test URL validity.
         if (url == null || url == "") {
             url = step.getUrl();
         }
 
-        // TODO handle this properly: neither selector, nor manually added URL
         if (url == null || url == "") {
             // nowhere to go...
             return;
@@ -204,7 +199,6 @@ public class WebDriverCrawler implements AutoCloseable {
         List<WebElement> elements = selector.findElements(context);
         for (WebElement element : elements) {
 
-            // TODO handle the id generation process
             String id = null;
             Individual individual = this.ontology.createEmptyIndividual(id, clazz);
 
@@ -236,7 +230,6 @@ public class WebDriverCrawler implements AutoCloseable {
             for (WebElement element : elements) {
                 OntProperty ontProperty = this.ontology.getOntProperty(property, PropertyType.DATA);
                 String text = element.getText();
-                // TODO Figure out the datatype (currently defaults to XSD_STRING) of this literal.
                 // It shall fit the specification of the property in our included schemas.
                 parent.addProperty(ontProperty, this.ontology.createLiteral(Vocabulary.XSD_STRING, text));
             }
@@ -244,10 +237,9 @@ public class WebDriverCrawler implements AutoCloseable {
             String result = null;
             result = selector.getText(context);
 
-            // TODO if (result != null)
+            // if (result != null)
             return result;
 
-            // TODO the rest of value-of algorithm
             // if (step.hasRegex())
             // if (step.hasReplace())
             // if (step.hasValue())
@@ -273,29 +265,6 @@ public class WebDriverCrawler implements AutoCloseable {
             handleSteps(step.getSteps(), parent, element, web);
         }
     }
-
-    // -------------------------------------------------------------------------
-
-    // /**
-    // *
-    // * @param step
-    // * @param parent
-    // * @param context
-    // */
-    // private void handleStep(UserEventStep step, Individual parent, WebElement context, WebContext web) {
-    // switch (step.getValue()) {
-    // case (UserEventStep.BACK_EVT):
-    // web.back();
-    // break;
-    //
-    // case (UserEventStep.CLICK_EVT):
-    // context.click();
-    // break;
-    //
-    // default:
-    // throw new RuntimeException("Unimplemented user-event: " + step.getValue());
-    // }
-    // }
 
     // -------------------------------------------------------------------------
 

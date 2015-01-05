@@ -20,7 +20,6 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 import cz.sio2.crowler.JenaConnector;
 import cz.sio2.crowler.Utils;
-import cz.sio2.crowler.model.PropertyType;
 
 /**
  * @author kub1x
@@ -32,8 +31,6 @@ public class OntologyContext implements AutoCloseable {
     private final OntModel model;
     private final ResourceCache cache;
 
-    // TODO to be set from JSON
-    // TODO to be held in OntologyConfiguration
     private String baseOntoPrefix = "http://kub1x.org/onto/dip/t/";
     private Ontology ontology;
     private String ontologyId;
@@ -57,7 +54,6 @@ public class OntologyContext implements AutoCloseable {
 
     public Literal createLiteral(String rdfDataTypeIRI, String text) {
         if (rdfDataTypeIRI == null) {
-            // TODO lang into OntologyConfiguration
             return model.createLiteral(text, "en");
         } else {
             if (rdfDataTypeIRI.startsWith("http://www.w3.org/2001/XMLSchema")) {
@@ -98,7 +94,6 @@ public class OntologyContext implements AutoCloseable {
     }
 
     public void addImport(String importIri) {
-        // TODO Auto-generated method stub
         this.ontology.addImport(ModelFactory.createOntologyModel().createOntology(importIri));
 
     }
@@ -107,7 +102,6 @@ public class OntologyContext implements AutoCloseable {
 
         this.connector.connect();
 
-        // TODO How to properly generate ontology ID?
         this.ontologyId = String.format("http://kub1x.org/onto/dip/t/%s-%s", scenarioName, getCurrentTimeStamp());
         this.baseOntoPrefix = ontologyId + "/";
         this.ontology = model.createOntology(ontologyId);
@@ -118,7 +112,7 @@ public class OntologyContext implements AutoCloseable {
         // Persist
         final Model persistModel = this.connector.getModel(this.ontologyId);
         persistModel.add(model);
-        // copy (yep.. this doest only copy) the prefixes from OntModel into Jena Model
+        // copy the prefixes from OntModel into Jena Model
         persistModel.setNsPrefixes(model.getNsPrefixMap());
         this.connector.closeModel(persistModel);
 

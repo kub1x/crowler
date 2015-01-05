@@ -12,7 +12,6 @@ import java.util.List;
  */
 public class OntoElemStep extends Step implements WithSubsteps {
 
-    // TODO change type to URI
     private String typeof;
     private Selector selector;
     private String rel;

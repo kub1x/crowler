@@ -9,7 +9,6 @@ package cz.sio2.crowler.scenario;
  */
 public class ValueOfStep extends Step {
 
-    // TODO change type to URI
     private String property = null;
     private Selector selector = null;
     private String text = null;
