@@ -1,2 +1,4 @@
 PHANTOM_PATH="/usr/bin/phantomjs"
-java -jar crowler.jar --scenario kub1x.sowl --rdfDir results --phantom "${PHANTOM_PATH}"
+#SCRIPT=kub1x.sowl
+SCRIPT=$1
+java -jar crowler.jar --scenario "${SCRIPT}" --rdfDir results --phantom "${PHANTOM_PATH}"
