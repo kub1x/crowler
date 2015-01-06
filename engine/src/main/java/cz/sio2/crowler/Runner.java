@@ -14,29 +14,29 @@ import cz.sio2.crowler.selenium.WebDriverCrawler;
 
 public class Runner {
 
-    @Option(name = "--sesameUrl")
-    private String sesameUrl = null;
-
-    @Option(name = "--repositoryId")
-    private String repositoryId = null;
-
-    @Option(name = "--phantom", usage = "specify where Phantom is installed")
-    private String phantomPath = "C:/Program Files/phantomjs-1.9.8/phantomjs.exe";
-
-    @Option(name = "--rdfDir", usage = "print output as RDF files into directory specified by this argument (currently default, required)")
-    private String rdfDir = null;
+    @Option(name = "--help", usage = "print this help")
+    private boolean isHelp = false;
 
     @Option(name = "--scenario", usage = "path to xml scenario (currently required)")
     private String scenarioPath = null;
+
+    @Option(name = "--rdfDir", usage = "store output RDF files into directory specified by this argument")
+    private String rdfDir = null;
+
+    @Option(name = "--sesameUrl", usage = "URL of sesame repository (if specified --rdfDir is ignored)")
+    private String sesameUrl = null;
+
+    @Option(name = "--repositoryId", usage = "id of target sesame repository, required with --sesameUrl")
+    private String repositoryId = null;
+
+    @Option(name = "--phantom", usage = "specify where PhantomJs is installed (Firefox will be used otherwise)")
+    private String phantomPath = null; // "C:/Program Files/phantomjs-1.9.8/phantomjs.exe";
 
     public static void main(String[] args) throws Exception {
         new Runner().doMain(args);
     }
 
     public void doMain(String[] args) throws Exception {
-
-        System.setProperty("phantom.path", phantomPath);
-
         // Parsing console arguments
         CmdLineParser parser = new CmdLineParser(this);
         parser.setUsageWidth(160); // Wider console output
@@ -57,11 +57,22 @@ public class Runner {
             return;
         }
 
-        System.out.println("DEBUG rdfDir: " + rdfDir);
-        System.out.println("DEBUG scenarioPath: " + scenarioPath);
+        if (isHelp) {
+            dieWithUsage("", parser);
+        }
+
+        if (scenarioPath == null) {
+            dieWithUsage("Missing argument: --scenario", parser);
+        }
+
+        if (phantomPath != null) {
+            System.setProperty("phantom.path", phantomPath);
+        } else {
+            dieWithUsage("Missing argument: --phantom", parser);
+        }
 
         JenaConnector connector = null;
-        if (sesameUrl != null) {
+        if (sesameUrl != null && repositoryId != null) {
             XTrustProvider.install();
             final SesameJenaConnector cx = new SesameJenaConnector();
             cx.setServerUrl(sesameUrl);
@@ -74,6 +85,10 @@ public class Runner {
             connector = cx;
         } else if (rdfDir != null) {
             connector = new FileJenaConnector(new File(rdfDir), false);
+        } else {
+            // Default to current directory
+            System.err.println("Warning: missing some target attribute. Storing results into current directory. ");
+            connector = new FileJenaConnector(new File("."), false);
         }
 
         System.out.println("-- starting --");
@@ -91,4 +106,13 @@ public class Runner {
         System.out.println("-- finished --");
     }
 
+    void dieWithUsage(String msg, CmdLineParser parser) {
+        System.err.println(msg);
+        System.err.println();
+        System.err.println("usage:   java -jar crowler.jar --scenario <file_path> (--rdfDir <dir_path> | (--sesameUrl <url> --repositoryId <id>)) [--phantom <phantom_path>]");
+        System.err.println();
+        parser.printUsage(System.err);
+        System.err.println();
+        System.exit(1);
+    }
 }

@@ -6,6 +6,7 @@ package cz.sio2.crowler.selenium;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -20,15 +21,17 @@ public class WebContext implements AutoCloseable {
 
     public WebContext() {
 
-        // Firefox
-        // this.wd = new FirefoxDriver();
-
-        // Phantom
-        DesiredCapabilities caps = new DesiredCapabilities();
-        caps.setJavascriptEnabled(true); // not really needed: JS enabled by default
-        caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, System.getProperty("phantom.path"));
-        this.wd = new PhantomJSDriver(caps);
-
+        String phantomPath = System.getProperty("phantom.path");
+        if (phantomPath == null) {
+            // Firefox
+            this.wd = new FirefoxDriver();
+        } else {
+            // Phantom
+            DesiredCapabilities caps = new DesiredCapabilities();
+            caps.setJavascriptEnabled(true); // not really needed: JS enabled by default
+            caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, phantomPath);
+            this.wd = new PhantomJSDriver(caps);
+        }
         // HtmlUint
         // this.wd = new HtmlUnitDriver(BrowserVersion.FIREFOX_);
     }
