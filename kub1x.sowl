@@ -1,0 +1,78 @@
+{
+  "type": "scenario",
+  "name": "kub1x",
+  "ontology": {
+    "base": "http://kub1x.org/dip/"
+  },
+  "call-template": {
+    "command": "call-template",
+    "name": "init",
+    "url": "http://www.inventati.org/kub1x/t/"
+  },
+  "templates": [
+    {
+      "command": "template",
+      "name": "init",
+      "steps": [
+        {
+          "command": "onto-elem",
+          "typeof": "http://xmlns.com/foaf/0.1/Person",
+          "selector": {
+            "value": "tr",
+            "type": "css"
+          },
+          "rel": "",
+          "steps": [
+            {
+              "command": "value-of",
+              "selector": {
+                "value": "td:nth-child(1)",
+                "type": "css"
+              },
+              "property": "http://xmlns.com/foaf/0.1/firstName"
+            },
+            {
+              "command": "value-of",
+              "selector": {
+                "value": "td:nth-child(2)",
+                "type": "css"
+              },
+              "property": "http://xmlns.com/foaf/0.1/lastName"
+            },
+            {
+              "command": "value-of",
+              "selector": {
+                "value": "td:nth-child(3)",
+                "type": "css"
+              },
+              "property": "http://xmlns.com/foaf/0.1/phone"
+            },
+            {
+              "command": "call-template",
+              "name": "detail",
+              "selector": {
+                "value": "a",
+                "type": "css"
+              },
+              "url": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "command": "template",
+      "name": "detail",
+      "steps": [
+        {
+          "command": "value-of",
+          "selector": {
+            "value": "span",
+            "type": "css"
+          },
+          "property": "http://xmlns.com/foaf/0.1/nick"
+        }
+      ]
+    }
+  ]
+}
