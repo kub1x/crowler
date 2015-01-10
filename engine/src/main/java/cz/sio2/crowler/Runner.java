@@ -68,7 +68,7 @@ public class Runner {
         if (phantomPath != null) {
             System.setProperty("phantom.path", phantomPath);
         } else {
-            dieWithUsage("Missing argument: --phantom", parser);
+            // dieWithUsage("Missing argument: --phantom", parser);
         }
 
         JenaConnector connector = null;
